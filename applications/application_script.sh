@@ -42,7 +42,7 @@ est_file=${PATH}esteff.txt
 # Perform application 
 if [ "$sex_label" = "Unknown" ]
 then
-	echo 'Summary statistics includes ukbb individuals. The step can not be performed!'
+	echo 'Do not obtain the sex information. The step can not be performed!'
 fi
 if [ "$inc_ukbb" = "No" ]
 then
