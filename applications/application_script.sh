@@ -36,8 +36,8 @@ PRS_app=/root/biosoft/get_picture/PRS_application.R
 test_path=/disk/testSet/
 
 # Set path
-PATH=${Jobpath}${METHOD}
-est_file=${PATH}esteff.txt
+OUTPATH=${Jobpath}${METHOD}
+est_file=${OUTPATH}esteff.txt
 
 # Perform application 
 if [ "$sex_label" = "Unknown" ]
@@ -51,7 +51,7 @@ then
 		echo 'phenocode is not found! The step can not be performed!'
 	else
 		### Calculate PGS
-		out_prefix=${PATH}pred_hm3_${sex_label}
+		out_prefix=${OUTPATH}pred_hm3_${sex_label}
 		for chr in `seq 1 22`
 		do
 			bfile=${test_path}${ancestry}/genotype/${sex_label}/chr${chr}
@@ -65,7 +65,7 @@ then
 		${Rscript} ${PRS_app} --phenocode ${phenocode} \
 							  --sex ${sex_label} \
 							  --anc ${ancestry} \
-							  --out_path ${out_path}
+							  --out_path ${OUTPATH}
 	fi
 else
 	echo 'Summary statistics includes ukbb individuals. The step can not be performed!'
