@@ -20,9 +20,26 @@ ancestry2=`sed -n '9p' ${Summary} | sed 's/^[^\t]\+[\t]\+//'`
 PY=/root/anaconda3/envs/python3/bin/python
 outpath=`echo "$parameter" | awk -F'/parameter.txt' '{print $1}'`
 val_genotype=`sed -n '1p' ${parameter} | sed 's/^[^\t]\+[\t]\+//'`
-ref=/disk/reference_pgsfusion/SDPRx/${ancestry1}_${ancestry2}/SDPRX
-score=/disk/reference_pgsfusion/SDPRx/${ancestry1}_${ancestry2}_all_gen_eff.cscore
-
+# get ref
+if [ "$ancestry1" == "EUR" ] && [ "$ancestry2" == "EAS" ]; then
+ref=/disk/reference_pgsfusion/SDPRx/EUR_EAS/SDPRX
+score=/disk/reference_pgsfusion/SDPRx/EUR_EAS_all_gen_eff.cscore
+elif [ "$ancestry1" == "EAS" ] && [ "$ancestry2" == "EUR" ]; then
+ref=/disk/reference_pgsfusion/SDPRx/EUR_EAS/SDPRX
+score=/disk/reference_pgsfusion/SDPRx/EUR_EAS_all_gen_eff.cscore
+elif [ "$ancestry1" == "AFR" ] && [ "$ancestry2" == "EUR" ]; then
+ref=/disk/reference_pgsfusion/SDPRx/EUR_AFR/SDPRX
+score=/disk/reference_pgsfusion/SDPRx/EUR_AFR_all_gen_eff.cscore
+elif [ "$ancestry1" == "EUR" ] && [ "$ancestry2" == "AFR" ]; then
+ref=/disk/reference_pgsfusion/SDPRx/EUR_AFR/SDPRX
+score=/disk/reference_pgsfusion/SDPRx/EUR_AFR_all_gen_eff.cscore
+elif [ "$ancestry1" == "EAS" ] && [ "$ancestry2" == "AFR" ]; then
+ref=/disk/reference_pgsfusion/SDPRx/EUR_AFR/SDPRX
+score=/disk/reference_pgsfusion/SDPRx/EUR_AFR_all_gen_eff.cscore
+elif [ "$ancestry1" == "AFR" ] && [ "$ancestry2" == "EAS" ]; then
+ref=/disk/reference_pgsfusion/SDPRx/EUR_EAS/SDPRX
+score=/disk/reference_pgsfusion/SDPRx/EUR_EAS_all_gen_eff.cscore
+fi
 # Get sample size
 nobs1=`sed -n "2p" ${Summary_stat1} | awk '{print $5}'`
 nmis1=`sed -n "2p" ${Summary_stat1} | awk '{print $4}'`
@@ -92,6 +109,3 @@ sudo rm ${outpath}/summ21.txt
 sudo rm ${outpath}/correlation.txt.e.log
 sudo rm ${outpath}/correlation.txt.o.log
 sudo rm ${outpath}/correlation.txt
-
-
-
