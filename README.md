@@ -4,6 +4,15 @@
 We develop PGSFusion to perform polygenic score (PGS) construction and epidemiolgical application. PGSFusion accepted many different formats of summary statistics and implements a wide range of PGS methods, including single-trait, multiple-trait, annotation-based, and cross-ancestry methods. PGSFusion provided further epidemiological analysis: i) prediction performance evaluation; and ii) interaction identification. <br>
 The user can use the server to visit the website: [http://www.pgsfusion.net/#/](http://www.pgsfusion.net/#/)
 
+## PGSFusion pipeline
++ <strong>Processing UKBB data</strong><br>
+We used UKBB data to build the validation set and test set. Two sets consist of 50,000 European indiciduals. Four methode, including CT, lassosum2, LDrped2 and DBSLMM, need validation set. <br>
++ <strong>PGS methods</strong><br>
+We integrated 16 PGS methods, including single-trait, multiple-trait, annotation-based and cross-ancestry methods. <br>
++ <strong>PGS application</strong><br>
+We provided two applications: i) prediction performance evaluation; ii) interaction analysis. <br>
+
+
 ## Update log
 + <strong>Version 2.0 (May 2024)</strong><br>
 We update the PGSFusion in formating summary statistics and performing epidemiological applications <br>
