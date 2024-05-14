@@ -1,49 +1,88 @@
+###### extract for valid and valid2 set ######
+eth=EUR
+geno_path=/public/home/Datasets/ukb/geno/${eth}/hm3_nosex/
+out_path=/public/home/biostat04/Project/19_PGS_fusion/02_ukb/
+plink=/public/home/biostat04/biosoft/plink/plink
 #
-project_path=/public/home/biostat04/Project/19_PGS_fusion/
-geno_path=/public/home/Datasets/ukb/geno/
-
-## validation, validation2 and test sets in EUR ancestry
+for type in valid valid2
+do
+for sex in All Female Male
+do
+#
+out_pathx=${out_path}${type}/geno/${sex}/
+merge_list=${out_pathx}merge_list.txt
+touch ${merge_list}
+#
 for chr in `seq 1 22`
 do
+#
+id_list=${out_path}${type}/eid_${type}_${sex}.txt
+bfile=${geno_path}chr${chr}
 
-for type in valid valid2 test
+${plink} --bfile ${bfile} \
+--keep ${id_list} \
+--indiv-sort f ${id_list} \
+--make-bed \
+--out ${out_pathx}chr${chr}
+
+if [[ $chr -ne 1 ]]
+then
+echo ${out_pathx}chr${chr} >> ${merge_list}
+fi
+
+done
+#
+${plink} --bfile ${out_pathx}chr1 \
+--merge-list ${merge_list} \
+--make-bed \
+--indiv-sort f ${id_list} \
+--out ${out_pathx}merge
+
+done
+done
+
+###### extract for test set ######
+out_path=/public/home/biostat04/Project/19_PGS_fusion/02_ukb/test/
+plink=/public/home/biostat04/biosoft/plink/plink
+
+for eth in AFR ASA EUR
 do
+
+geno_path=/public/home/Datasets/ukb/geno/${eth}/hm3_nosex/
 
 for sex in All Female Male
 do
 
-bfile=${geno_path}EUR/hm3_nosex/chr${chr}
-idx=${project_path}02_ukb/${type}/eid_${type}_${sex}.txt
-outx=${project_path}02_ukb/${type}/geno/${sex}/chr${chr}
-# valid
-plink --bfile ${bfile} \
---keep ${idx} \
---make-bed \
---out ${outx}
-done
-done
-done
+out_pathx=${out_path}${eth}/geno/${sex}/
+merge_list=${out_pathx}merge_list.txt
+touch ${merge_list}
 
-## test sets in ASA and AFR ancestries
+# extract for each chr
 for chr in `seq 1 22`
 do
 
-for ancestry in AFR ASA
-do
+id_list=${out_path}${eth}/eid_test_${sex}.txt
+bfile=${geno_path}chr${chr}
 
-for sex in All Female Male
-do
-
-type=test_${ancestry}
-bfile=${geno_path}${ancestry}/hm3/chr${chr}
-idx=${project_path}02_ukb/${ancestry}/eid_${type}_${sex}.txt
-outx=${project_path}02_ukb/${ancestry}/geno/${sex}/chr${chr}
-# valid
-plink --bfile ${bfile} \
---keep ${idx} \
+${plink} --bfile ${bfile} \
+--keep ${id_list} \
+--indiv-sort f ${id_list} \
 --make-bed \
---out ${outx}
-done
-done
-done
+--out ${out_pathx}chr${chr}
 
+# format merge_list
+if [[ $chr -ne 1 ]]
+then
+echo ${out_pathx}chr${chr} >> ${merge_list}
+fi
+
+done
+# memrge
+${plink} --bfile ${out_pathx}chr1 \
+--merge-list ${merge_list} \
+--make-bed \
+--indiv-sort f ${id_list} \
+--out ${out_pathx}merge
+
+done
+done
