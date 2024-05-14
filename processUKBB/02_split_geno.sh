@@ -36,8 +36,8 @@ do
 
 type=test_${ancestry}
 bfile=${geno_path}${ancestry}/hm3/chr${chr}
-idx=${project_path}02_ukb/${type}/eid_${type}_${sex}.txt
-outx=${project_path}02_ukb/${type}/geno/${sex}/chr${chr}
+idx=${project_path}02_ukb/${ancestry}/eid_${type}_${sex}.txt
+outx=${project_path}02_ukb/${ancestry}/geno/${sex}/chr${chr}
 # valid
 plink --bfile ${bfile} \
 --keep ${idx} \
