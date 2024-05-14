@@ -35,7 +35,7 @@ for sex in All Female Male
 do
 
 type=test_${ancestry}
-bfile=${geno_path}${ancestry}/hm3_nosex/chr${chr}
+bfile=${geno_path}${ancestry}/hm3/chr${chr}
 idx=${project_path}02_ukb/${type}/eid_${type}_${sex}.txt
 outx=${project_path}02_ukb/${type}/geno/${sex}/chr${chr}
 # valid
