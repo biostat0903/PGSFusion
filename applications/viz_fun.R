@@ -308,7 +308,7 @@ perform.strata.test <- function(pheno = NULL,
     x[["perform"]]
   }) %>% Reduce("rbind", .) %>% as.data.frame()
   colnames(perform_strata) <- c("perform", "lowCI", "highCI")
-  perform_strata$Group <- names(datt_group_list) 
+  perform_strata$Group <- factor(names(datt_group_list), levels = names(datt_group_list))
   ## compare performance in strata
   all_comp_pair <- combn(names(perform_test_strata), 2)
   n_pair <- ncol(all_comp_pair)
