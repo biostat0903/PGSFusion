@@ -360,6 +360,7 @@ perform.strata.plt <- function(datt = NULL,
   title_lab <- paste0("Performance by ", strata_var)
   
   # plot 
+  datt$Group <- factor(datt$Group, levels = datt$Group)
   datt <- subset(datt, rowSums(is.na(datt)) == 0)
   plt <- ggplot(datt, aes(x = Group, y = perform, color = Group)) + 
     geom_hline(yintercept = ref_y, 
