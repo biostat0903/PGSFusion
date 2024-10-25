@@ -121,7 +121,7 @@ effect.strata.plt <- function(datt = NULL,
   if (model == "binomial") {
     est_PGS <- exp(est_PGS) %>% as.data.frame()
   }
-  est_PGS$Group <- levels(datt$Group)
+  est_PGS$Group <- levels(datt$Group) %>% factor(., levels = levels(datt$Group))
   ## other parameters fro plot
   x_lab <- ""
   y_lab <- ifelse(model == "binomial", "OR (95% CI)", "Beta (95% CI)")
