@@ -354,7 +354,7 @@ perform.strata.plt <- function(datt = NULL,
   # plot parameters
   x_lab <- ""
   y_lab <- ifelse(type == "c", 
-                  bquote(italic(R)^2~" (95% CI)"), 
+                  as.expression(bquote(italic(R)^2~" (95% CI)")), 
                   "AUC (95% CI)")
   ref_y <- ifelse(type == "c", 0, 0.5)
   title_lab <- paste0("Performance by ", strata_var)
