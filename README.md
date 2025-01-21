@@ -14,6 +14,9 @@ We provided two applications: i) prediction performance evaluation; ii) interact
 
 
 ## Update log
++ <strong>Version 3.0 (Jan 2025)</strong><br>
+We add SBayesRC method <br>
+We 
 + <strong>Version 2.0 (May 2024)</strong><br>
 We update the PGSFusion in formating summary statistics and performing epidemiological applications <br>
 + <strong>Version 1.0 (Dec 2023)</strong><br>
