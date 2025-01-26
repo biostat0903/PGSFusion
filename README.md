@@ -1,4 +1,4 @@
-# PGSFusion streamlines polygenic score construction and epidemiological application in biobank scale cohort <br>
+# PGSFusion <br>
 
 ## Overview
 We develop PGSFusion to perform polygenic score (PGS) construction and epidemiolgical application. PGSFusion accepted many different formats of summary statistics and implements a wide range of PGS methods, including single-trait, multiple-trait, annotation-based, and cross-ancestry methods. PGSFusion provided further epidemiological analysis: i) prediction performance evaluation; and ii) interaction identification. <br>
