@@ -1,0 +1,140 @@
+PFID	Category	Reported Trait	Code
+PFIDQ1001	 Anthropometric	Hand grip strength (left)	p46_i0
+PFIDQ1002	 Anthropometric	Hand grip strength (right)	p47_i0
+PFIDQ1003	 Anthropometric	Waist circumference	p48_i0
+PFIDQ1004	 Anthropometric	Hip circumference	p49_i0
+PFIDQ1005	 Anthropometric	Waist hip ratio	p48_i0/p49_i0
+PFIDQ1006	 Anthropometric	Standing height	p50_i0
+PFIDQ1007	 Anthropometric	Seated height	p51_i0
+PFIDQ1008	 Anthropometric	Heel bone ultrasound T-score	p77_i0
+PFIDQ1009	 Anthropometric	Systolic blood pressure, manual reading	p93_i0_a0
+PFIDQ1010	 Anthropometric	Diastolic blood pressure, manual reading	p94_i0_a0
+PFIDQ1011	 Anthropometric	Pulse rate	p95_i0_a0
+PFIDQ1012	 Anthropometric	Pulse rate, automated reading	p102_i0_a0
+PFIDQ1013	 Anthropometric	Heel bone mineral density (BMD), manual entry	p3084_i0
+PFIDQ1014	 Anthropometric	Heart rate (ECG)	p5983_i0_a0
+PFIDQ1015	 Anthropometric	Impedance of whole body, manual entry	p23106_i0
+PFIDQ1016	 Anthropometric	Impedance of leg, manual entry (right)	p23107_i0
+PFIDQ1017	 Anthropometric	Impedance of leg, manual entry (left)	p23108_i0
+PFIDQ1018	 Anthropometric	Impedance of arm, manual entry (right)	p23109_i0
+PFIDQ1019	 Anthropometric	Impedance of arm, manual entry (left)	p23110_i0
+PFIDQ1020	 Anthropometric	Peak expiratory flow (PEF) (pilot)	p10696_i0_a1
+PFIDQ1021	 Anthropometric	Birth weight	p20022_i0
+PFIDQ1022	 Anthropometric	Forced vital capacity (FVC), Best measure	p20150_i0
+PFIDQ1023	 Anthropometric	Forced expiratory volume in 1-second (FEV1), Best measure	p20151_i0
+PFIDQ1024	 Anthropometric	FEV1/FVC	p20151_i0/p20150_i0
+PFIDQ1025	 Anthropometric	Body mass index (BMI)	p21001_i0
+PFIDQ1026	 Anthropometric	Weight	p21002_i0
+PFIDQ1027	 Anthropometric	Body fat percentage	p23099_i0
+PFIDQ1028	 Anthropometric	Whole body fat mass	p23100_i0
+PFIDQ1029	 Anthropometric	Whole body fat-free mass	p23101_i0
+PFIDQ1030	 Anthropometric	Whole body water mass	p23102_i0
+PFIDQ1031	 Anthropometric	Leg fat percentage (right)	p23111_i0
+PFIDQ1032	 Anthropometric	Leg fat mass (right)	p23112_i0
+PFIDQ1033	 Anthropometric	Leg fat-free mass (right)	p23113_i0
+PFIDQ1034	 Anthropometric	Leg predicted mass (right)	p23114_i0
+PFIDQ1035	 Anthropometric	Leg fat percentage (left)	p23115_i0
+PFIDQ1036	 Anthropometric	Leg fat mass (left)	p23116_i0
+PFIDQ1037	 Anthropometric	Leg fat-free mass (left)	p23117_i0
+PFIDQ1038	 Anthropometric	Leg predicted mass (left)	p23118_i0
+PFIDQ1039	 Anthropometric	Arm fat percentage (right)	p23119_i0
+PFIDQ1040	 Anthropometric	Arm fat mass (right)	p23120_i0
+PFIDQ1041	 Anthropometric	Arm fat-free mass (right)	p23121_i0
+PFIDQ1042	 Anthropometric	Arm predicted mass (right)	p23122_i0
+PFIDQ1043	 Anthropometric	Arm fat percentage (left)	p23123_i0
+PFIDQ1044	 Anthropometric	Arm fat mass (left)	p23124_i0
+PFIDQ1045	 Anthropometric	Arm fat-free mass (left)	p23125_i0
+PFIDQ1046	 Anthropometric	Arm predicted mass (left)	p23126_i0
+PFIDQ1047	 Anthropometric	Trunk fat percentage	p23127_i0
+PFIDQ1048	 Anthropometric	Trunk fat mass	p23128_i0
+PFIDQ1049	 Anthropometric	Trunk fat-free mass	p23129_i0
+PFIDQ1050	 Anthropometric	Trunk predicted mass	p23130_i0
+PFIDQ1051	 Anthropometric	Total BMD (bone mineral density)	p23236_i2
+PFIDQ1052	 Anthropometric	Total BMD (bone mineral density) T-score	p23239_i2
+PFIDQ1053	 Anthropometric	Ankle spacing width (right)	p4119_i0
+PFIDQ1054	 Anthropometric	Ankle spacing width (left)	p4100_i0
+PFIDQ1055	 Anthropometric	Intra-ocular pressure, corneal-compensated (right)	p5254_i0
+PFIDQ1056	 Anthropometric	Intra-ocular pressure, Goldmann-correlated (right)	p5255_i0
+PFIDQ1057	 Anthropometric	Corneal hysteresis (right)	p5256_i0
+PFIDQ1058	 Anthropometric	Corneal resistance factor (right)	p5257_i0
+PFIDQ1059	 Anthropometric	Intra-ocular pressure, corneal-compensated (left)	p5262_i0
+PFIDQ1060	 Anthropometric	Intra-ocular pressure, Goldmann-correlated (left)	p5263_i0
+PFIDQ1061	 Anthropometric	Corneal hysteresis (left)	p5264_i0
+PFIDQ1062	 Anthropometric	Corneal resistance factor (left)	p5265_i0
+PFIDQ2001	Blood and Unrine Test	White blood cell (leukocyte) count	p30000_i0
+PFIDQ2002	Blood and Unrine Test	Red blood cell (erythrocyte) count	p30010_i0
+PFIDQ2003	Blood and Unrine Test	Haemoglobin concentration	p30020_i0
+PFIDQ2004	Blood and Unrine Test	Haematocrit percentage	p30030_i0
+PFIDQ2005	Blood and Unrine Test	Mean corpuscular volume	p30040_i0
+PFIDQ2006	Blood and Unrine Test	Mean corpuscular haemoglobin	p30050_i0
+PFIDQ2007	Blood and Unrine Test	Mean corpuscular haemoglobin concentration	p30060_i0
+PFIDQ2008	Blood and Unrine Test	Red blood cell (erythrocyte) distribution width	p30070_i0
+PFIDQ2009	Blood and Unrine Test	Platelet count	p30080_i0
+PFIDQ2010	Blood and Unrine Test	Platelet crit	p30090_i0
+PFIDQ2011	Blood and Unrine Test	Mean platelet (thrombocyte) volume	p30100_i0
+PFIDQ2012	Blood and Unrine Test	Platelet distribution width	p30110_i0
+PFIDQ2013	Blood and Unrine Test	Lymphocyte count	p30120_i0
+PFIDQ2014	Blood and Unrine Test	Monocyte count	p30130_i0
+PFIDQ2015	Blood and Unrine Test	Neutrophill count	p30140_i0
+PFIDQ2016	Blood and Unrine Test	Eosinophill count	p30150_i0
+PFIDQ2017	Blood and Unrine Test	Basophill count	p30160_i0
+PFIDQ2018	Blood and Unrine Test	Nucleated red blood cell count	p30170_i0
+PFIDQ2019	Blood and Unrine Test	Lymphocyte percentage	p30180_i0
+PFIDQ2020	Blood and Unrine Test	Monocyte percentage	p30190_i0
+PFIDQ2021	Blood and Unrine Test	Neutrophill percentage	p30200_i0
+PFIDQ2022	Blood and Unrine Test	Eosinophill percentage	p30210_i0
+PFIDQ2023	Blood and Unrine Test	Basophill percentage	p30220_i0
+PFIDQ2024	Blood and Unrine Test	Nucleated red blood cell percentage	p30230_i0
+PFIDQ2025	Blood and Unrine Test	Reticulocyte percentage	p30240_i0
+PFIDQ2026	Blood and Unrine Test	Reticulocyte count	p30250_i0
+PFIDQ2027	Blood and Unrine Test	Mean reticulocyte volume	p30260_i0
+PFIDQ2028	Blood and Unrine Test	Mean sphered cell volume	p30270_i0
+PFIDQ2029	Blood and Unrine Test	Immature reticulocyte fraction	p30280_i0
+PFIDQ2030	Blood and Unrine Test	High light scatter reticulocyte percentage	p30290_i0
+PFIDQ2031	Blood and Unrine Test	High light scatter reticulocyte count	p30300_i0
+PFIDQ2032	Blood and Unrine Test	Microalbumin in urine	p30500_i0
+PFIDQ2033	Blood and Unrine Test	Creatinine (enzymatic) in urine	p30510_i0
+PFIDQ2034	Blood and Unrine Test	Potassium in urine	p30520_i0
+PFIDQ2035	Blood and Unrine Test	Sodium in urine	p30530_i0
+PFIDQ2036	Blood and Unrine Test	Albumin	p30600_i0
+PFIDQ2037	Blood and Unrine Test	Alkaline phosphatase	p30610_i0
+PFIDQ2038	Blood and Unrine Test	Alanine aminotransferase	p30620_i0
+PFIDQ2039	Blood and Unrine Test	Apolipoprotein A	p30630_i0
+PFIDQ2040	Blood and Unrine Test	Apolipoprotein B	p30640_i0
+PFIDQ2041	Blood and Unrine Test	Aspartate aminotransferase	p30650_i0
+PFIDQ2042	Blood and Unrine Test	Direct bilirubin	p30660_i0
+PFIDQ2043	Blood and Unrine Test	Urea	p30670_i0
+PFIDQ2044	Blood and Unrine Test	Calcium	p30680_i0
+PFIDQ2045	Blood and Unrine Test	Cholesterol	p30690_i0
+PFIDQ2046	Blood and Unrine Test	Creatinine	p30700_i0
+PFIDQ2047	Blood and Unrine Test	C-reactive protein	p30710_i0
+PFIDQ2048	Blood and Unrine Test	Cystatin C	p30720_i0
+PFIDQ2049	Blood and Unrine Test	Gamma glutamyltransferase	p30730_i0
+PFIDQ2050	Blood and Unrine Test	Glucose	p30740_i0
+PFIDQ2051	Blood and Unrine Test	Glycated haemoglobin (HbA1c)	p30750_i0
+PFIDQ2052	Blood and Unrine Test	HDL cholesterol	p30760_i0
+PFIDQ2053	Blood and Unrine Test	IGF-1	p30770_i0
+PFIDQ2054	Blood and Unrine Test	LDL direct	p30780_i0
+PFIDQ2055	Blood and Unrine Test	Lipoprotein A	p30790_i0
+PFIDQ2056	Blood and Unrine Test	Oestradiol	p30800_i0
+PFIDQ2057	Blood and Unrine Test	Phosphate	p30810_i0
+PFIDQ2058	Blood and Unrine Test	Rheumatoid factor	p30820_i0
+PFIDQ2059	Blood and Unrine Test	SHBG	p30830_i0
+PFIDQ2060	Blood and Unrine Test	Total bilirubin	p30840_i0
+PFIDQ2061	Blood and Unrine Test	Testosterone	p30850_i0
+PFIDQ2062	Blood and Unrine Test	Total protein	p30860_i0
+PFIDQ2063	Blood and Unrine Test	Triglycerides	p30870_i0
+PFIDQ2064	Blood and Unrine Test	Urate	p30880_i0
+PFIDQ2065	Blood and Unrine Test	Vitamin D	p30890_i0
+PFIDQ3001	Other	Neuroticism score	p20127_i0
+PFIDQ3002	Other	Age completed full time education	p845_i0
+PFIDQ3003	Other	Sleep duration	p1160_i0
+PFIDQ3004	Other	Father's age at death	p1807_i0
+PFIDQ3005	Other	Age when periods started (menarche)	p2714_i0
+PFIDQ3006	Other	Mother's age at death	p3526_i0
+PFIDQ3007	Other	Age of death 	p40007_i0
+PFIDQ3008	Other	Age at cancer diagnosis	p40008_i0
+PFIDQ3009	Other	Fluid intelligence score	p20016_i0
+PFIDQ3010	Other	Age first had sexual intercourse	p2139_i0
+PFIDQ3011	Other	Year ended full time education	p22501
+PFIDQ3012	Other	Duration screen displayed	p4290_i0

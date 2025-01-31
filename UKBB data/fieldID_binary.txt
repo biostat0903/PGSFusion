@@ -1,0 +1,64 @@
+PFID	Category	Reported Trait	UKBB Code	Self-reported Trait	Self-reported Code	ICD10	PMID
+PFIDB1001	Cancer	Colorectal cancer	p20001,p40006,p41202,p41204	large bowel cancer/colorectal cancer	1020	C18,C19,C20	36351667,32709735,38750076,37148584
+PFIDB1002	Cancer	Lung cancer	p20001,p40006,p41202,p41204	lung cancer	1001	C33,C34	34252012,37148584
+PFIDB1003	Cancer	Malignant melanoma	p20001,p40006,p41202,p41204	malignant melanoma	1059	C43	32709735,37148584,38750076
+PFIDB1004	Cancer	Non-Hodgkin Lymphoma	p40006,p41202,p41204	non-hodgkins lymphoma	1053	C82,C83,C84,C85	32709735,38750076
+PFIDB1005	Cancer	Breast cancer	p20001,p40006,p41202,p41204	breast cancer	1002	C50	32709735,38750076,37148584
+PFIDB1006	Cancer	Cervical cancer	p20001,p40006,p41202,p41204	cervical cancer	1041	C53	32709735,37148584
+PFIDB1007	Cancer	Uterine cancer	p20001,p40006,p41202,p41204	uterine/endometrial cancer	1040	C54	32709735,38750076
+PFIDB1008	Cancer	Ovarian cancer	p20001,p40006,p41202,p41204	ovarian cancer	1039	C56	32709735,38750076,37148584
+PFIDB1009	Cancer	Prostate cancer	p20001,p40006,p41202,p41204	prostate cancer	1044	C61	32709735,38750076,37148584
+PFIDB1010	Cancer	Testicular cancer	p20001,p40006,p41202,p41204	testicular cancer	1045	C62	37148584
+PFIDB1011	Cancer	Kidney cancer	p20001,p40006,p41202,p41204	kidney/renal cell cancer	1034	C64,C65	32709735,38750076,37148584
+PFIDB1012	Cancer	Bladder cancer	p20001,p40006,p41202,p41204	bladder cancer	1035	C67	32709735,38750076,37148584
+PFIDB1013	Cancer	Thyroid cancer	p20001,p40006,p41202,p41204	thyroid cancer	1065	C73	32709735,38750076,37148584
+PFIDB1014	Cancer	Leukaemia	p20001,p40006,p41202,p41204	leukaemia	1048	C91,C92,C93,C94,C95	32709735,38750076,37148584
+PFIDB2001	Non cancer	Septicaemia	p20002,p41202,p41204	aortic aneurysm rupture	1657	A41.9 	NA
+PFIDB2002	Non cancer	Leiomyoma of uterus	p41202,p41204	uterine fibroids	1351	D25	39844969
+PFIDB2003	Non cancer	Anaemia	p20002,p41202,p41204	anemia	1446	D50,D51,D52,D53,D54,D55,D56,D57,D58,D59,D60,D61,D62,D63,D64	38607561
+PFIDB2004	Non cancer	Hypothyroidism	p20002,p41202,p41204	hypothyroidism/myxoedema	1226	E03	https://doi.org/10.1101/2022.10.04.22280703
+PFIDB2005	Non cancer	Type II diabetes 	p20002,p41202,p41204	type 2 diabetes	1223	E11	34857534
+PFIDB2006	Non cancer	Dementia	p20002,p41202,p41204	dementia/alzheimers/cognitive impairment	1263	F00, F01, F02, F03, G30, G31	38589703
+PFIDB2007	Non cancer	Insomnia	p20002,p41202,p41204	insomnia	1616	F51.0	NA
+PFIDB2008	Non cancer	Major depression disorder	p20002,p41202,p41204	depression	1286	F32,F33	38589703
+PFIDB2009	Non cancer	Bipolar disorder	p20002,p41202,p41204	mania/bipolar disorder/manic depression	1291	F31	38589703
+PFIDB2010	Non cancer	Anxiety disorder	p20002,p41202,p41204	anxiety/panic attacks	1287	F40,F41	38589703
+PFIDB2011	Non cancer	Schizophrenia	p20002,p41202,p41204	schizophrenia	1289	F20	38589703
+PFIDB2012	Non cancer	Autism spectrum disorder	p41202,p41204	NA	NA	F84.0,F84.1,F84.5,F84.9	39474987
+PFIDB2013	Non cancer	Parkinson disease	p20002,p41202,p41204	parkinsons disease	1262	G20	37348876
+PFIDB2014	Non cancer	Sleep apnoea	p41202,p41204	sleep apnoea	1123	G47,G51	38589703
+PFIDB2015	Non cancer	Cataract	p20002,p41202,p41204	cataract	1278	H25,H26	34127677
+PFIDB2016	Non cancer	Degeneration of macula and posterior pole	p20002,p41202,p41204	macular degeneration	1528	H35.3	33971878,39739349
+PFIDB2017	Non cancer	Primary open angle glaucoma	p20002,p41202,p41204	glaucoma	1277	H40.1,H40.8,H40.9	33971878
+PFIDB2018	Non cancer	Hearing loss	p41202,p41204	NA	NA	H90,H91	39676318
+PFIDB2019	Non cancer	Essential (primary) hypertension	p20002,p41202,p41204	essential hypertension	1072	I10	36802288
+PFIDB2020	Non cancer	Angina pectoris	p20002,p41202,p41204	angina	1074	I20	39633571
+PFIDB2021	Non cancer	Coronary artery disease	p20002,p41202,p41204	heart attack/myocardial infarction	1075	I21,I22,I23,I24.1,I25.2	35708014
+PFIDB2022	Non cancer	Atrial fibrillation	p20002,p41202,p41204	atrial fibrillation	1471	I48	37938842
+PFIDB2023	Non cancer	Dilated cardiomyopathy	p20002,p41202,p41204	cardiomyopathy	1079	I42.0	35708014
+PFIDB2024	Non cancer	Venous thromboembolic disease	p20002,p41202,p41204	venous thromboembolic disease	1068	I80,I81,I82,I26	30649175
+PFIDB2025	Non cancer	Chronic obstructive pulmonary disease	p20002,p41202,p41204	chronic obstructive airways disease/copd	1112	J41,J42,J43,J44	37069358
+PFIDB2026	Non cancer	Asthma	p20002,p41202,p41204	asthma	1111	J45,J46	32890573
+PFIDB2027	Non cancer	Gastro-oesophageal reflux disease	p20002,p41202,p41204	gastro-oesophageal reflux (gord) / gastric reflux	1138	K21.0,K21.9	31527586,32588049
+PFIDB2028	Non cancer	Polyp of stomach and duodenum	p41202,p41204	NA	NA	K31.7	39647990
+PFIDB2029	Non cancer	Crohns disease	p20002,p41202,p41204	crohns disease	1462	K50	36305857
+PFIDB2030	Non cancer	Ulcerative colitis	p20002,p41202,p41204	ulcerative colitis	1463	K51	36305857
+PFIDB2031	Non cancer	Diverticular disease of intestine	p20002,p41202,p41204	diverticular disease/diverticulitis	1458	K57	35876359
+PFIDB2032	Non cancer	Irritable bowel syndrome	p20002,p41202,p41204	irritable bowel syndrome	1154	K58	35130187
+PFIDB2033	Non cancer	Rectal or colon polyps	p20002,p41202,p41204	rectal or colon polyps	1460	K62.1,K63.5	39647990
+PFIDB2034	Non cancer	Cholelithiasis	p41202,p41204	cholelithiasis/gall stones	1162	K80	34624136
+PFIDB2035	Non cancer	Rheumatoid arthritis	p20002,p41202,p41204	rheumatoid arthritis	1464	M05,M06	38081205
+PFIDB2036	Non cancer	Gout	p20002,p41202,p41204	gout	1466	M10	35128470
+PFIDB2037	Non cancer	Osteoarthritis 	p20002,p41202,p41204	osteoarthritis	1465	M15.1,M15.2,M19.0,M16.0,M16.1,M16.9,M17.0,M17.1,M17.9	36239377
+PFIDB2038	Non cancer	Osteoporosis	p20002,p41202,p41204	osteoporosis	1309	M80.0,M81.0,M81.5,M81.8,M81.9	38141141
+PFIDB2039	Non cancer	Acute renal failure	p41202,p41204	NA	NA	N17	33462484
+PFIDB2040	Non cancer	Chronic kidney disease	p41202,p41204	NA	NA	N18	33462484
+PFIDB2041	Non cancer	Kidney failure	p20002,p41202,p41204	renal/kidney failure	1192	N19	33462484
+PFIDB2042	Non cancer	Hyperplasia of prostate	p20002,p41202,p41204	enlarged prostate	1396	N40	30410027
+PFIDB2043	Non cancer	Polyp of corpus uteri	p20002,p41202,p41204	uterine polyps	1352	N84.0	38416166
+PFIDB2044	Non cancer	Headache	p20002,p41202,p41204	headaches (not migraine)	1436	R51	NA
+PFIDB3001	Other	Fractured/broken bones in last 5 years	p2463	NA	NA	NA	NA
+PFIDB3002	Other	Ease of skin tanning	p1727	NA	NA	NA	NA
+PFIDB3003	Other	Type I balding	p2395	NA	NA	NA	37737258
+PFIDB3004	Other	Ever smoked	p20160	NA	NA	NA	NA
+PFIDB3005	Other	Snoring	p1210	NA	NA	NA	NA
