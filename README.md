@@ -5,10 +5,12 @@ We develop PGSFusion to perform polygenic score (PGS) construction and epidemiol
 The user can use the server to visit the website: [http://www.pgsfusion.net/#/](http://www.pgsfusion.net/#/)
 
 ## PGSFusion pipeline
-+ <strong>Processing UKBB data</strong><br>
-We used UKBB data to build the validation set and test set. Two sets consist of 50,000 European indiciduals. Four methode, including CT, lassosum2, LDrped2 and DBSLMM, need validation set. <br>
-+ <strong>PGS methods</strong><br>
-We integrated 16 PGS methods, including single-trait, multiple-trait, annotation-based and cross-ancestry methods. <br>
+### UKBB data
++ We select 139 quantitative traits (i.e. 62 Anthropometric traits, 65 Blood and Unrine Test traits and 12 Other traits) and 63 binary traits (i.e. 14 Cancers, 44 Non-cancer Diseases, and 5 Non-diseases). <br>
++ We used UKBB data to build the reference panel, validation set and test set. For EUR reference panels, we used 2,000 EUR individuals in UKBB. For AFR and EAS, we used corresponding individuals in 1000 Genome Project. For EUR test set, we selected 50,000 individuals in UKBB. For AFR and EAS, we selected all the corresponding samples in UKBB. <br>
+### PGS methods
++ We construct
++ We integrated 16 PGS methods, including single-trait, multiple-trait, annotation-based and cross-ancestry methods. <br>
 + <strong>PGS application</strong><br>
 We provided two applications: i) prediction performance evaluation; ii) interaction analysis. <br>
 
