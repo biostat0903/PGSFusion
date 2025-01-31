@@ -9,24 +9,22 @@ The user can use the server to visit the website: [http://www.pgsfusion.net/#/](
 + We select 139 quantitative traits (i.e. 62 Anthropometric traits, 65 Blood and Unrine Test traits and 12 Other traits) and 63 binary traits (i.e. 14 Cancers, 44 Non-cancer Diseases, and 5 Non-diseases). <br>
 + We used UKBB data to build the reference panel, validation set and test set. For EUR reference panels, we used 2,000 EUR individuals in UKBB. For AFR and EAS, we used corresponding individuals in 1000 Genome Project. For EUR test set, we selected 50,000 individuals in UKBB. For AFR and EAS, we selected all the corresponding samples in UKBB. <br>
 ### PGS methods
-+ We construct
-+ We integrated 16 PGS methods, including single-trait, multiple-trait, annotation-based and cross-ancestry methods. <br>
-+ <strong>PGS application</strong><br>
-We provided two applications: i) prediction performance evaluation; ii) interaction analysis. <br>
-
++ We integrated 17 PGS methods, including 11 single-trait, 1 multiple-trait, 2 annotation-based and 3 cross-ancestry based methods. <br>
++ We constructed the reference panel for each method.
+### PGS application
++ We output the linkage for the selected methods
++ We provide two further applications: i) prediction performance evaluation; ii) interaction analysis. <br>
 
 ## Update log
-+ <strong>Version 3.0 (Jan 2025)</strong><br>
-We add SBayesRC method <br>
-We 
-+ <strong>Version 2.0 (May 2024)</strong><br>
-We update the PGSFusion in formating summary statistics and performing epidemiological applications <br>
-+ <strong>Version 1.0 (Dec 2023)</strong><br>
-We first build the SRT-Server to streamline the PGS construction
-
-## Q&A
-If there are any problems for PGSFusion, please feel free to ask here. We will ask you as soon as possible. 
+### Version 3.0 (Jan 2025)
++ Add the number of quantitative and binary traits <br>
++ Add SBayesRC method <br>
++ Use 2,000 EUR individuals to build EUR reference panel <br>
+### Version 2.0 (May 2024)
++ Update the PGSFusion in formating summary statistics and performing epidemiological applications
+### Version 1.0 (Dec 2023)
++ Build the PGSFusion to streamline the PGS construction
 
 ## Citation
 If you used our server, please cite the our paper: <br>
-<em> Yang S, Ye X, Ji X, Li Z, Tian M, Huang P, and Cao C. PGSFusion streamlines polygenic score construction and epidemiological application in biobank scale cohort. </em>
+<strong><em>Yang S</em></strong>, Ye X, Ji X, Li Z, Tian M, Huang P, and Cao C. PGSFusion streamlines polygenic score construction and epidemiological application in biobank scale cohort.
