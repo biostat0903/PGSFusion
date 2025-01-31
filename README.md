@@ -19,6 +19,7 @@ The user can use the server to visit the website: [http://www.pgsfusion.net/#/](
 ### Version 3.0 (Jan 2025)
 + Add the number of quantitative and binary traits <br>
 + Add SBayesRC method <br>
++ Add the comparison of prediction performance for selected methods <br>
 + Use 2,000 EUR individuals to build EUR reference panel <br>
 ### Version 2.0 (May 2024)
 + Update the PGSFusion in formating summary statistics and performing epidemiological applications
