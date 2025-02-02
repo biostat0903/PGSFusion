@@ -28,4 +28,4 @@ The user can use the server to visit the website: [http://www.pgsfusion.net/#/](
 
 ## Citation
 If you used our server, please cite the our paper: <br>
-<strong><em>Yang S</em></strong>, Ye X, Ji X, Li Z, Tian M, Huang P, and Cao C. PGSFusion streamlines polygenic score construction and epidemiological application in biobank scale cohort.
+<em><strong>Yang S</strong></em>\#\*, Ye X\#, Ji X\#, Li Z, Tian M, Huang P\*, Cao C\*. PGSFusion streamlines polygenic score construction and epidemiological applications in biobank-scale cohorts. <em>bioRxiv</em>. 
