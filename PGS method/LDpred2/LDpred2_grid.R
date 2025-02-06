@@ -124,6 +124,7 @@ esteff <- alply(c(1: 22), 1, function(CHR) {
   }
   ## Select the best parameter
   # val_G <- snp_fastImputeSimple(val_sub_bed$genotypes)
+  val_G <- val_sub_bed$genotypes
   pred_grid <- big_prodMat(val_G, beta_grid)
   idx_na <- apply(pred_grid, 2, function(a) all(is.na(a))) | 
     apply(beta_grid, 2, function(a) all(is.na(a)))
