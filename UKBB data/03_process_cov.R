@@ -44,7 +44,7 @@ cov_data <- alply(c(1: length(sample_id)), 1, function (ss){
     covar_s <- covar[match(sample_id[[ss]], covar$eid), -1]
     # write.table(covar_s, col.names = F, row.names = F, quote = F,
     #             file = paste0(PATH, "out_pheno/", names(sample_id)[ss], "/cov.txt"))
-    if (grepl("test", names(sample_id)[ss])){
+    if (grepl("val", names(sample_id)[ss])){
      
       covar_coef <- alply(c(1: length(pheno_files)), 1, function (pp){
         
@@ -65,7 +65,7 @@ cov_data <- alply(c(1: length(sample_id)), 1, function (ss){
     covar_s <- covar[match(sample_id[[ss]], covar$eid), -c(1, 3)]
     # write.table(covar_s, col.names = F, row.names = F, quote = F,
     #             file = paste0(PATH, "out_pheno/", names(sample_id)[ss], "/cov.txt"))
-    if (grepl("test", names(sample_id)[ss])){
+    if (grepl("val", names(sample_id)[ss])){
       
       covar_coef <- alply(c(1: length(pheno_files)), 1, function (pp){
         
