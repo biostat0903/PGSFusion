@@ -13,7 +13,102 @@ GROUP_COL <- c("#A5170E", "#1965B0", "#F4A736", "#4EB265",
               "#E6BEFF", "#9A6324", "#FFFAC8", "#800000")
 ROC_COL <- c("#E41A1C","#377EB8")
 
-##### function 1: PGS.trend.plt #####
+
+# Function 1: test for R2 or AUC
+perform.test <- function(pheno = NULL, 
+                         pred = NULL,
+                         type = "gaussian"
+){
+  
+  if (type == "gaussian") {
+    
+    perform_test <- cor.test(pheno, pred)
+    perform <- c(perform_test$estimate, perform_test$conf.int)^2
+  } else {
+    
+    perform_test <- roc(pheno, pred, levels = c(0, 1))
+    perform <- ci.auc(perform_test)[c(2, 1, 3)]
+  }
+  return(list("test" = perform_test,
+              "perform" = perform))
+}
+
+# Function 2: density plot
+dens.plt <- function(pheno = NULL,
+                     pred = NULL,
+                     type = "gaussian"
+){
+  
+  # R square
+  r2 <- perform.test(pheno = pheno, 
+                     pred = pred, 
+                     type = type)[["perform"]][1] %>% round(4)
+  datt <- data.frame(Value = c(pheno, pred),
+                     Group = c(rep("Trait", length(pheno)),
+                               rep("PGS", length(pred))))
+  anno_lab <- bquote(italic(R)^2~"="~.(r2))
+  # plot
+  plt <- ggplot(datt) +
+    geom_density(aes(x = Value, fill = Group),
+                 alpha = 0.2, size = 0.6) +
+    scale_fill_manual(values = ROC_COL) + 
+    annotate("text", 
+             x = 0, y = 0.5, 
+             size = 5, colour="grey10",
+             label = anno_lab) + 
+    ylab("Density") + xlab("") +
+    theme_bw() + 
+    theme(legend.position = "right",
+          panel.grid = element_blank(),
+          legend.title = element_text(size = 12, face = "bold", color = "black"),
+          legend.text = element_text(size = 10, color = "black"),
+          title = element_text(size = 15, face = "bold", color = "black"),
+          axis.text = element_text(size = 12, color = "black"),
+          axis.title = element_text(size = 15, face = "bold", color = "black"))
+  return(plt)
+}
+
+# Function 3: ROC plot
+roc.plt <- function(pheno = NULL,
+                    pred = NULL,
+                    type = "b"
+){
+  
+  # AUC
+  perform_test <- perform.test(pheno = pheno, 
+                               pred = pred, 
+                               type = type)
+  auc_vec <- perform_test[["perform"]] %>% round(2)
+  auc <- paste0("AUC: ", 
+                auc_vec[1] , "(",
+                auc_vec[2], "~", 
+                auc_vec[3], ")")
+  roc <- perform_test[["test"]]
+  datt <- data.frame(Model = "ROC",
+                     rev_specificity = 1 - roc$specificities,
+                     sensitivity = roc$sensitivities)
+  # plot
+  plt <- ggplot(datt) +
+    geom_line(aes(x = rev_specificity, y = sensitivity), 
+              color = "#4DAF4A", linetype = 2, size = 1.3) +
+    geom_abline(slope = 1, intercept = 0, 
+                color = "grey10", linetype = 2) + 
+    annotate("text", 
+             x = 0.7, y = 0.2, 
+             size = 5, colour="grey10",
+             label = auc) + 
+    xlab("1-Specificity") + ylab("Sensitivity") +
+    theme_bw() + 
+    theme(axis.title = element_text(size = 15, face = "bold"),
+          axis.text = element_text(size = 12, color = "black"),
+          panel.grid = element_blank(),
+          legend.text = element_text(size = 10),
+          legend.title = element_text(size = 12, face = "bold"))
+  
+  return(plt)
+}
+
+# Function 4: PGS trend plot 
 PGS.trend.plt <- function(datt = NULL,
                           n = NULL,
                           type = "gaussian"
@@ -32,8 +127,10 @@ PGS.trend.plt <- function(datt = NULL,
                           highCI = c(0, (summ_coef_PGSg[,1] + 1.96*summ_coef_PGSg[,2])))
   if (type == "binomial") 
     est_PGS_g <- exp(est_PGS_g) %>% as.data.frame()
+  high <- seq(0, 100, length = n + 1)[-1] %>% round()
+  low <- c(0, high[-n] + 1)
   est_PGS_g$Group <- seq(0, 100, length = n + 1)[-1] %>% round()
-  
+
   x_lab <- "PGS (%)"
   y_lab <- ifelse(type == "binomial", "OR (95% CI)", "Beta (95% CI)")
   ref_y <- ifelse(type == "binomial", 1, 0)
@@ -62,7 +159,8 @@ PGS.trend.plt <- function(datt = NULL,
              x = 85, y = min(est_PGS_g$lowCI) - 0.1,
              size = 5, colour="grey10",
              label = anno_lab) +
-    scale_x_continuous(breaks = est_PGS_g$Group) +
+    scale_x_continuous(breaks = est_PGS_g$Group, 
+                       labels = paste0(low,  "~", high)) + 
     scale_color_viridis_c() +
     stat_smooth(method = "lm",
                 se = F, linetype = 2, color = "red") +
@@ -72,11 +170,207 @@ PGS.trend.plt <- function(datt = NULL,
     theme(axis.text = element_text(size = 12, color = "black"),
           axis.title = element_text(size = 15, face = "bold", color = "black"),
           title = element_text(size = 15, face = "bold", color = "black"))
+  return(plt)
+}
+
+# Function 5: PGS in strata plot
+PGS.strata.plt <- function(datt = NULL,
+                           strata_var = NULL
+){
+  
+  # plot parameters
+  x_lab <- ""
+  y_lab <- "PGS"
+  title_lab <- paste0("PGS by ", strata_var)
+  n_group <- length(unique(datt$Group))
+  # p value
+  datt <- subset(datt, rowSums(is.na(datt)) == 0)
+  if (n_group == 1) {
+    anno_lab <- NULL
+  } else {
+    
+    if (n_group == 2) {
+      p_diff <- wilcox.test(PGS~Group, datt)$p.value
+    } else {
+      p_diff <- kruskal.test(PGS~Group, datt)$p.value
+    }
+    p_diff <- p_diff %>% 
+      format(., scientific = T, digits = 4) %>%
+      gsub("e", "E", .)
+    anno_lab <- bquote(italic(P)~"="~.(p_diff))
+  }
+  # plot
+  plt <- ggplot(datt) + 
+    geom_boxplot(aes(x = Group, y = PGS, color = Group),
+                 width = 0.3, size = 1.2, fill = NA) + 
+    scale_color_manual(values = BAR_COL) + 
+    annotate("text", 
+             x = n_group * 0.5, y = max(datt$PGS)*1.1, 
+             size = 5, colour="grey10",
+             label = anno_lab) + 
+    xlab(x_lab) + ylab(y_lab) +
+    ggtitle(title_lab) +
+    theme_bw() + 
+    theme(legend.position = "none",
+          title = element_text(size = 15, face = "bold", color = "black"),
+          axis.text = element_text(size = 12, color = "black"),
+          axis.title = element_text(size = 15, face = "bold", color = "black"))
   
   return(plt)
 }
 
-##### function 2: effect.strata.plt #####
+# Function 6: compare prediction performance
+perform.compare <- function(model1 = NULL,
+                            model2 = NULL,
+                            type = "gaussian"
+){
+  
+  if (type == "gaussian") {
+    perform_compare <- cocor.indep.groups(r1.jk = model1$estimate,
+                                          r2.hm = model2$estimate,
+                                          n1 = model1$parameter + 2,
+                                          n2 = model2$parameter + 2,
+                                          alternative = "two.sided",
+                                          test = "fisher1925",
+                                          alpha = 0.05,
+                                          conf.level = 0.95,
+                                          return.htest = F)
+    return(perform_compare@fisher1925$p.value)
+  } else {
+    
+    perform_compare <- roc.test(roc1 = model1, 
+                                roc2 = model2, 
+                                method = "bootstrap", 
+                                alternative = "two.sided",
+                                boot.n = 2000, 
+                                progress = "none",
+                                conf.level = 0.95)
+    return(perform_compare$p.value)
+  }
+}
+
+# Function 7: PGS in strata
+perform.strata.test <- function(pheno = NULL,
+                                pred = NULL,
+                                type = "gaussian",
+                                subgroup = NULL
+){
+  
+  ## format input
+  datt <- data.frame(pheno = pheno,
+                     pred = pred,
+                     Group = subgroup)
+  datt <- subset(datt, rowSums(is.na(datt)) == 0)
+  datt_group_list <- split(datt, 
+                           f = ~ datt$Group)
+  
+  ## calculate performance for each group
+  perform_test_strata <- lapply(datt_group_list, function(datt_group_listx){
+    
+    performx <- tryCatch({
+      performx <- perform.test(pheno = datt_group_listx$pheno, 
+                               pred = datt_group_listx$pred,
+                               type = type)
+    }, error = function(e){
+      performx <- list("test" = NA,
+                       "perform" = rep(NA, 3))
+    })
+    
+    return(performx)
+  })
+  ## format prediction performance
+  perform_strata <- lapply(perform_test_strata, function(x){
+    x[["perform"]]
+  }) %>% Reduce("rbind", .) %>% as.data.frame()
+  colnames(perform_strata) <- c("perform", "lowCI", "highCI")
+  perform_strata$Group <- factor(names(datt_group_list), levels = names(datt_group_list))
+  ## compare performance in strata
+  all_comp_pair <- combn(names(perform_test_strata), 2)
+  n_pair <- ncol(all_comp_pair)
+  perform_strata_test <- lapply(1:ncol(all_comp_pair), function(comb_x){
+    
+    pairx <- all_comp_pair[,comb_x, drop = T]
+    perform_test_x1 <- perform_test_strata[[pairx[1]]]
+    perform_test_x2 <- perform_test_strata[[pairx[2]]]
+    
+    if (any(is.na(perform_test_x1[["perform"]] + 
+                  perform_test_x2[["perform"]]))) {
+      
+      p_performx <- NA
+    } else {
+      
+      p_performx <- perform.compare(model1 = perform_test_x1[["test"]],
+                                    model2 = perform_test_x2[["test"]],
+                                    type = type)
+    }
+    return(matrix(c(pairx, p_performx), nrow = 1))
+  }) %>% Reduce("rbind", .) %>% as.data.frame()
+  ## format test data frame
+  colnames(perform_strata_test) <- c("group1", "group2", "p")
+  perform_strata_test$p.adj <- p.adjust(perform_strata_test$p, method = "BH") %>% 
+    round(3)
+  perform_strata_test$p.adj[perform_strata_test$p.adj < 0.001] <- "< 0.001"
+  ref_perform <- ifelse(type == "gaussian", 0, 0.5)
+  range_perform <- max(perform_strata$highCI) - min(c(ref_perform, perform_strata$lowCI))
+  perform_strata_test$y.position <- max(perform_strata$highCI) + 
+    (c(n_pair:1) - 1) * range_perform * 0.08
+  
+  return(list("perform_strata" = perform_strata,
+              "test" = perform_strata_test))
+}
+
+
+# Function 8: performance strata plot
+perform.strata.plt <- function(datt = NULL,
+                               test = NULL,
+                               type = "gaussian",
+                               strata_var = NULL
+){
+  
+  # plot parameters
+  x_lab <- ""
+  y_lab <- ifelse(type == "gaussian", 
+                  as.expression(bquote(italic(R)^2~" (95% CI)")),
+                  "AUC (95% CI)")
+  ref_y <- ifelse(type == "gaussian", 0, 0.5)
+  title_lab <- paste0("Performance by ", strata_var)
+  
+  # plot 
+  datt <- subset(datt, rowSums(is.na(datt)) == 0)
+  plt <- ggplot(datt, aes(x = Group, y = perform, color = Group)) + 
+    geom_hline(yintercept = ref_y, 
+               color = "grey50", 
+               linetype = 2, 
+               size = 1) +
+    geom_pointrange(aes(ymin = lowCI, ymax = highCI),
+                    stat='identity',
+                    alpha = 1, 
+                    show.legend = F, 
+                    position = position_dodge(0.6),
+                    size = 1) +
+    scale_x_discrete(breaks = datt$Group) +
+    xlab(x_lab) + ylab(y_lab) +
+    ggtitle(title_lab) + 
+    scale_color_manual(values = GROUP_COL) +
+    theme_bw() + 
+    theme(axis.text = element_text(size = 12, color = "black"),
+          axis.title = element_text(size = 15, face = "bold", color = "black"),
+          title = element_text(size = 15, face = "bold", color = "black"))
+  ## add test
+  if (!is.null(test)) {
+    
+    plt <- plt +  
+      stat_pvalue_manual(test,
+                         label = "p.adj",
+                         tip.length = 0.01, 
+                         label.size = 4, 
+                         bracket.size = 0.6)
+  }
+  return(plt)
+}
+
+
+# Function 9: effect strata plot
 effect.strata.plt <- function(datt = NULL,
                               strata_var = NULL,
                               model = "gaussian"
@@ -156,297 +450,7 @@ effect.strata.plt <- function(datt = NULL,
   return(list(plt, summ_out))
 }
 
-##### function 3: dens.plt #####
-dens.plt <- function(pheno = NULL,
-                     pred = NULL,
-                     type = "gaussian"
-){
-  
-  # R square
-  r2 <- perform.test(pheno = pheno, 
-                     pred = pred, 
-                     type = type)[["perform"]][1] %>% round(4)
-  datt <- data.frame(Value = c(pheno, pred),
-                     Group = c(rep("Trait", length(pheno)),
-                               rep("PGS", length(pred))))
-  anno_lab <- bquote(italic(R)^2~"="~.(r2))
-  # plot
-  plt <- ggplot(datt) +
-    geom_density(aes(x = Value, fill = Group),
-                 alpha = 0.2, size = 0.6) +
-    scale_fill_manual(values = ROC_COL) + 
-    annotate("text", 
-             x = 0, y = 0.5, 
-             size = 5, colour="grey10",
-             label = anno_lab) + 
-    ylab("Density") + xlab("") +
-    theme_bw() + 
-    theme(legend.position = "right",
-          panel.grid = element_blank(),
-          legend.title = element_text(size = 12, face = "bold", color = "black"),
-          legend.text = element_text(size = 10, color = "black"),
-          title = element_text(size = 15, face = "bold", color = "black"),
-          axis.text = element_text(size = 12, color = "black"),
-          axis.title = element_text(size = 15, face = "bold", color = "black"))
-  return(plt)
-}
-
-##### function 4: roc.plt #####
-roc.plt <- function(pheno = NULL,
-                    pred = NULL,
-                    type = "b"
-){
-  
-  # AUC
-  perform_test <- perform.test(pheno = pheno, 
-                               pred = pred, 
-                               type = type)
-  auc_vec <- perform_test[["perform"]] %>% round(2)
-  auc <- paste0("AUC: ", 
-                auc_vec[1] , "(",
-                auc_vec[2], "~", 
-                auc_vec[3], ")")
-  roc <- perform_test[["test"]]
-  datt <- data.frame(Model = "ROC",
-                     rev_specificity = 1 - roc$specificities,
-                     sensitivity = roc$sensitivities)
-  # plot
-  plt <- ggplot(datt) +
-    geom_line(aes(x = rev_specificity, y = sensitivity), 
-              color = "#4DAF4A", linetype = 2, size = 1.3) +
-    geom_abline(slope = 1, intercept = 0, 
-                color = "grey10", linetype = 2) + 
-    annotate("text", 
-             x = 0.7, y = 0.2, 
-             size = 5, colour="grey10",
-             label = auc) + 
-    xlab("1-Specificity") + ylab("Sensitivity") +
-    theme_bw() + 
-    theme(axis.title = element_text(size = 15, face = "bold"),
-          axis.text = element_text(size = 12, color = "black"),
-          panel.grid = element_blank(),
-          legend.text = element_text(size = 10),
-          legend.title = element_text(size = 12, face = "bold"))
-  
-  return(plt)
-}
-
-##### function 5: perform.test #####
-perform.test <- function(pheno = NULL, 
-                         pred = NULL,
-                         type = "gaussian"
-){
-  
-  if (type == "gaussian") {
-    
-    perform_test <- cor.test(pheno, pred)
-    perform <- c(perform_test$estimate, perform_test$conf.int)^2
-  } else {
-    
-    perform_test <- roc(pheno, pred, levels = c(0, 1))
-    perform <- ci.auc(perform_test)[c(2, 1, 3)]
-  }
-  return(list("test" = perform_test,
-              "perform" = perform))
-}
-
-##### function 6: perform.compare #####
-perform.compare <- function(model1 = NULL,
-                            model2 = NULL,
-                            type = "gaussian"
-){
-  
-  if (type == "gaussian") {
-    perform_compare <- cocor.indep.groups(r1.jk = model1$estimate,
-                                          r2.hm = model2$estimate,
-                                          n1 = model1$parameter + 2,
-                                          n2 = model2$parameter + 2,
-                                          alternative = "two.sided",
-                                          test = "fisher1925",
-                                          alpha = 0.05,
-                                          conf.level = 0.95,
-                                          return.htest = F)
-    return(perform_compare@fisher1925$p.value)
-  } else {
-    
-    perform_compare <- roc.test(roc1 = model1, 
-                                roc2 = model2, 
-                                method = "bootstrap", 
-                                alternative = "two.sided",
-                                boot.n = 2000, 
-                                progress = "none",
-                                conf.level = 0.95)
-    return(perform_compare$p.value)
-  }
-}
-
-
-##### function 7: perform.strata.test #####
-perform.strata.test <- function(pheno = NULL,
-                                pred = NULL,
-                                type = "gaussian",
-                                subgroup = NULL
-){
-  
-  ## format input
-  datt <- data.frame(pheno = pheno,
-                     pred = pred,
-                     Group = subgroup)
-  datt <- subset(datt, rowSums(is.na(datt)) == 0)
-  datt_group_list <- split(datt, 
-                           f = ~ datt$Group)
-  
-  ## calculate performance for each group
-  perform_test_strata <- lapply(datt_group_list, function(datt_group_listx){
-    
-    performx <- tryCatch({
-      performx <- perform.test(pheno = datt_group_listx$pheno, 
-                               pred = datt_group_listx$pred,
-                               type = type)
-    }, error = function(e){
-      performx <- list("test" = NA,
-                       "perform" = rep(NA, 3))
-    })
-    
-    return(performx)
-  })
-  ## format prediction performance
-  perform_strata <- lapply(perform_test_strata, function(x){
-    x[["perform"]]
-  }) %>% Reduce("rbind", .) %>% as.data.frame()
-  colnames(perform_strata) <- c("perform", "lowCI", "highCI")
-  perform_strata$Group <- factor(names(datt_group_list), levels = names(datt_group_list))
-  ## compare performance in strata
-  all_comp_pair <- combn(names(perform_test_strata), 2)
-  n_pair <- ncol(all_comp_pair)
-  perform_strata_test <- lapply(1:ncol(all_comp_pair), function(comb_x){
-    
-    pairx <- all_comp_pair[,comb_x, drop = T]
-    perform_test_x1 <- perform_test_strata[[pairx[1]]]
-    perform_test_x2 <- perform_test_strata[[pairx[2]]]
-    
-    if (any(is.na(perform_test_x1[["perform"]] + 
-                  perform_test_x2[["perform"]]))) {
-      
-      p_performx <- NA
-    } else {
-      
-      p_performx <- perform.compare(model1 = perform_test_x1[["test"]],
-                                    model2 = perform_test_x2[["test"]],
-                                    type = type)
-    }
-    return(matrix(c(pairx, p_performx), nrow = 1))
-  }) %>% Reduce("rbind", .) %>% as.data.frame()
-  ## format test data frame
-  colnames(perform_strata_test) <- c("group1", "group2", "p")
-  perform_strata_test$p.adj <- p.adjust(perform_strata_test$p, method = "BH") %>% 
-    round(3)
-  perform_strata_test$p.adj[perform_strata_test$p.adj < 0.001] <- "< 0.001"
-  ref_perform <- ifelse(type == "gaussian", 0, 0.5)
-  range_perform <- max(perform_strata$highCI) - min(c(ref_perform, perform_strata$lowCI))
-  perform_strata_test$y.position <- max(perform_strata$highCI) + 
-    (c(n_pair:1) - 1) * range_perform * 0.08
-  
-  return(list("perform_strata" = perform_strata,
-              "test" = perform_strata_test))
-}
-
-##### function 8: perform.strata.plt #####
-perform.strata.plt <- function(datt = NULL,
-                               test = NULL,
-                               type = "gaussian",
-                               strata_var = NULL
-){
-  
-  # plot parameters
-  x_lab <- ""
-  y_lab <- ifelse(type == "gaussian", 
-                  as.expression(bquote(italic(R)^2~" (95% CI)")),
-                  "AUC (95% CI)")
-  ref_y <- ifelse(type == "gaussian", 0, 0.5)
-  title_lab <- paste0("Performance by ", strata_var)
-  
-  # plot 
-  datt <- subset(datt, rowSums(is.na(datt)) == 0)
-  plt <- ggplot(datt, aes(x = Group, y = perform, color = Group)) + 
-    geom_hline(yintercept = ref_y, 
-               color = "grey50", 
-               linetype = 2, 
-               size = 1) +
-    geom_pointrange(aes(ymin = lowCI, ymax = highCI),
-                    stat='identity',
-                    alpha = 1, 
-                    show.legend = F, 
-                    position = position_dodge(0.6),
-                    size = 1) +
-    scale_x_discrete(breaks = datt$Group) +
-    xlab(x_lab) + ylab(y_lab) +
-    ggtitle(title_lab) + 
-    scale_color_manual(values = GROUP_COL) +
-    theme_bw() + 
-    theme(axis.text = element_text(size = 12, color = "black"),
-          axis.title = element_text(size = 15, face = "bold", color = "black"),
-          title = element_text(size = 15, face = "bold", color = "black"))
-  ## add test
-  if (!is.null(test)) {
-    
-    plt <- plt +  
-      stat_pvalue_manual(test,
-                         label = "p.adj",
-                         tip.length = 0.01, 
-                         label.size = 4, 
-                         bracket.size = 0.6)
-  }
-  return(plt)
-}
-
-##### function 9: PGS.strata.plt #####
-PGS.strata.plt <- function(datt = NULL,
-                           strata_var = NULL
-){
-  
-  # plot parameters
-  x_lab <- ""
-  y_lab <- "PGS"
-  title_lab <- paste0("PGS by ", strata_var)
-  n_group <- length(unique(datt$Group))
-  # p value
-  datt <- subset(datt, rowSums(is.na(datt)) == 0)
-  if (n_group == 1) {
-    anno_lab <- NULL
-  } else {
-    
-    if (n_group == 2) {
-      p_diff <- wilcox.test(PGS~Group, datt)$p.value
-    } else {
-      p_diff <- kruskal.test(PGS~Group, datt)$p.value
-    }
-    p_diff <- p_diff %>% 
-      format(., scientific = T, digits = 4) %>%
-      gsub("e", "E", .)
-    anno_lab <- bquote(italic(P)~"="~.(p_diff))
-  }
-  # plot
-  plt <- ggplot(datt) + 
-    geom_boxplot(aes(x = Group, y = PGS, color = Group),
-                 width = 0.3, size = 1.2, fill = NA) + 
-    scale_color_manual(values = BAR_COL) + 
-    annotate("text", 
-             x = n_group * 0.5, y = max(datt$PGS)*1.1, 
-             size = 5, colour="grey10",
-             label = anno_lab) + 
-    xlab(x_lab) + ylab(y_lab) +
-    ggtitle(title_lab) +
-    theme_bw() + 
-    theme(legend.position = "none",
-          title = element_text(size = 15, face = "bold", color = "black"),
-          axis.text = element_text(size = 12, color = "black"),
-          axis.title = element_text(size = 15, face = "bold", color = "black"))
-  
-  return(plt)
-}
-
-##### function 10: subgroup.plt #####
+# Function 10: subgroup plot
 subgroup.plt <- function(datt = NULL,
                          type = NULL,
                          sub_var = NULL,
