@@ -7,6 +7,8 @@ The user can use the server to visit the website: [http://www.pgsfusion.net/#/](
 ## PGSFusion pipeline
 ### UKBB data
 + We select 138 quantitative traits (i.e. 61 Anthropometric traits, 65 Blood and Unrine Test traits and 12 Other traits) and 63 binary traits (i.e. 14 Cancers, 44 Non-cancer Diseases, and 5 Other traits). <br>
++ We use three variables at baseline to assess the SES of each participant at individual level: including family income level (data field: p738_i0), education qualification (data field: p6138_i0), employment status (data field: p6142_i0).
++ We include information on four healthy lifestyle factors collected at baseline, including “no current smoking”, “regular physical activity”, “healthy diet”, and “no alcohol consumption”.
 + We used UKBB data to build the reference panel, validation set and test set. For EUR reference panels, we used 2,000 EUR individuals in UKBB. For AFR and EAS, we used corresponding individuals in 1000 Genome Project. For EUR test set, we selected 50,000 individuals in UKBB. For AFR and EAS, we selected all the corresponding samples in UKBB. <br>
 ### reference panel
 + We make refenence for different methods using 2,000 EUR individuals from UKBB . <br>
