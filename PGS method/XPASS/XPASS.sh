@@ -20,14 +20,19 @@ ancestry2=`sed -n '9p' ${Summary} | sed 's/^[^\t]\+[\t]\+//'`
 outpath=`echo "$parameter" | awk -F'/parameter.txt' '{print $1}'`
 if [ '$ancestry1' = 'EUR' ]; then
 	ref1=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/merge_imp
-	ref2=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/mergeout
+	ref2=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/merge_imp
 	pc1=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/PC5.txt
 	pc2=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/PC5.txt
 else
-	ref1=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/mergeout
-	ref2=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/merge_imp
-	pc1=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/PC5.txt
-	pc2=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/PC5.txt
+	ref1=/disk/reference_pgsfusion/1kg/${ancestry1}/hm3_imp/merge_imp
+  pc1=/disk/reference_pgsfusion/1kg/${ancestry1}/hm3_imp/PC5.txt
+  if [ '$ancestry2' = 'EUR' ]; then
+	  ref2=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/merge_imp
+    pc2=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/PC5.txt
+  else
+    ref2=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/merge_imp
+    pc2=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/PC5.txt
+  fi
 fi
 
 # Get N
