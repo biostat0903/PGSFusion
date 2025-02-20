@@ -22,6 +22,7 @@ The user can use the server to visit the website: [http://www.pgsfusion.net/#/](
 ## Update log
 ### Version 3.0 (Jan 2025)
 + Add the number of quantitative and binary traits <br>
++ Update DBSLMM (v1.0) <br>
 + Add covariables <br>
 + Add SBayesRC method <br>
 + Add the comparison of prediction performance for selected methods <br>
