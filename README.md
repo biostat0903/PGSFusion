@@ -23,8 +23,8 @@ The user can use the server to visit the website: [http://www.pgsfusion.net/#/](
 ## Update log
 ### Version 3.0 (Jan 2025)
 + Add the number of quantitative and binary traits <br>
-+ Update DBSLMM (v1.0) <br>
-+ Add covariables <br>
++ Update (DBSLMM)[https://github.com/biostat0903/DBSLMM] (v1.0) <br>
++ Use 11 strata variables <br>
 + Add SBayesRC method <br>
 + Add the comparison of prediction performance for selected methods <br>
 + Use 2,000 EUR individuals to build EUR reference panel <br>
