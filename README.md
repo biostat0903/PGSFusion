@@ -11,7 +11,8 @@ The user can use the server to visit the website: [http://www.pgsfusion.net/#/](
 + We include information on four healthy lifestyle factors collected at baseline, including “no current smoking”, “regular physical activity”, “healthy diet”, and “no alcohol consumption”.
 + We used UKBB data to build the reference panel, validation set and test set. For EUR reference panels, we used 2,000 EUR individuals in UKBB. For AFR and EAS, we used corresponding individuals in 1000 Genome Project. For EUR test set, we selected 50,000 individuals in UKBB. For AFR and EAS, we selected all the corresponding samples in UKBB. <br>
 ### reference panel
-+ We make refenence for different methods using 2,000 EUR individuals from UKBB . <br>
++ We make refenence panel for different methods using 2,000 EUR individuals from UKBB. <br>
++ We make the reference panel for EUR-AFR and EUR-EAS for SDPRX. <br>
 ### PGS method
 + We integrated 17 PGS methods, including 11 single-trait, 1 multiple-trait, 2 annotation-based and 3 cross-ancestry based methods. <br>
 + We constructed the reference panel for each method.
