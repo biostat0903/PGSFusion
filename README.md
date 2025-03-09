@@ -18,7 +18,7 @@ The user can use the server to visit the website: [http://www.pgsfusion.net/#/](
 + We constructed the reference panel for each method.
 ### PGS application
 + We output the linkage for the selected methods
-+ We provide two further applications: i) prediction performance evaluation; ii) interaction analysis. <br>
++ We provide two further applications: i) performance evaluation; ii) joint analysis. <br>
 
 ## Update log
 ### Version 3.0 (Jan 2025)
