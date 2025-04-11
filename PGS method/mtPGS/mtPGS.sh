@@ -19,7 +19,7 @@ ancestry=`sed -n '3p' ${Summary} | sed 's/^[^\t]\+[\t]\+//'`
 if [ $ancestry = 'EUR' ]; then
 	ref_panel=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/merge_imp
 else 
-	ref_panel=/disk/reference_pgsfusion/1kg/${ancestry}/h3_imp/mergeout
+	ref_panel=/disk/reference_pgsfusion/1kg/${ancestry}/h3_imp/merge_imp
 fi
 r2=`sed -n '1p' ${parameter} | sed 's/^[^\t]\+[\t]\+//'`
 pval=`sed -n '2p' ${parameter} | sed 's/^[^\t]\+[\t]\+//'`
