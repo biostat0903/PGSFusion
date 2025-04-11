@@ -44,7 +44,7 @@ then
 	else
     		sex_label="$sex"
 	fi
-	cov=/disk/validationSet/coef/${sex_label}/${phenocode}.txt
+	cov=/disk/validationSet/phenotype/${sex_label}/cov.txt
 	Rscript=/root/anaconda3/envs/dbslmm/bin/Rscript
 	${Rscript} ${DB_path}/DBSLMM.R --summary ${Summary_stat} --dbslmm ${DB_path}/dbslmm \
 	 							   --type tuning --model DBSLMM --block ${BLOCK} \
