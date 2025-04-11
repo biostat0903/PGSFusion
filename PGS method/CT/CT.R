@@ -11,10 +11,12 @@ library(optparse)
 args_list = list(
   make_option("--summ", type="character", default=NULL,
               help="INPUT: gemma file", metavar="character"), 
-  make_option("--val_phenotype", type="character", default=NULL,
+  make_option("--phenocode", type="character", default=NULL,
               help="INPUT: phenotype qqnorm", metavar="character"), 
-  make_option("--val_genotype", type="character", default=NULL,
+  make_option("--sex_label", type="character", default=NULL,
               help="INPUT: validation genotype", metavar="character"),
+  make_option("--dat", type="character", default=NULL,
+              help="INPUT: dat type", metavar="character"), 
   make_option("--reference", type="character", default=NULL,
               help="INPUT: reference panel", metavar="character"),
   make_option("--window", type="character", default=NULL,
@@ -23,10 +25,6 @@ args_list = list(
               help="INPUT: r2 value", metavar="character"),
   make_option("--plen", type="integer", default=NULL,
               help="INPUT: p value", metavar="character"),
-  make_option("--dat", type="character", default=NULL,
-              help="INPUT: dat type", metavar="character"),
-  make_option("--cov", type="character", default=NULL,
-              help="INPUT: covariates", metavar="character"),
   make_option("--output", type="character", default=NULL,
               help="INPUT: output path", metavar="character"),
   make_option("--jobid", type="character", default=NULL,
@@ -35,17 +33,16 @@ args_list = list(
 opt_parser = OptionParser(option_list=args_list)
 opt = parse_args(opt_parser)
 
-# opt <- list(summ = "/home/chencao_pgs/website/pgsfusion-server/job/14bb978f52a1468f9c9740c3e5bc8b85/trait1.txt",
-#             val_phenotype = "/disk/validationSet/phenotype/All/PFIDB024.txt",
-#             val_genotype = "/disk/validationSet/genotype/All/merge_imp",
+# opt <- list(summ = "/home/chencao_pgs/website/pgsfusion-server/job/f4de6a6da78a4c09a727d3647de9e52b/trait1.txt",
+#             phenocode = "PFIDB2006", 
+#             dat = "binary",
+#             sex_label = "All",
 #             reference = "/disk/reference_pgsfusion/EUR_UKB_ref",
 #             window = 50,
 #             r2 = 0.1,
 #             plen = 3,
-#             dat = "binary",
-#             cov = "/disk/validationSet/coef/All/PFIDB024.txt",
-#             output = "/home/chencao_pgs/website/pgsfusion-server/job/14bb978f52a1468f9c9740c3e5bc8b85",
-#             jobid = "14bb978f52a1468f9c9740c3e5bc8b85")
+#             output = "/home/chencao_pgs/website/pgsfusion-server/job/f4de6a6da78a4c09a727d3647de9e52b",
+#             jobid = "f4de6a6da78a4c09a727d3647de9e52b")
 
 # Set parameters
 TEMP_DIR <- paste0("/root/reference/intermediate_file/", opt$jobid)
@@ -102,11 +99,20 @@ all_keep <- snp_grid_clumping(ref_G,
 
 # Estimate PGS in validation set
 ## Load validation phenotype
-y <- fread2(opt$val_phenotype, header = F)[, 1]
-covar <- fread2(opt$cov, header = F)[, 1]
-if (!file.exists(paste0(opt$val_genotype, "merge_imp.rds")))
-  snp_readBed(paste0(opt$val_genotype, "merge_imp.bed"))
-val_bed <- snp_attach(paste0(opt$val_genotype, "merge_imp.rds"))
+y <- fread2(paste0("/disk/validationSet/phenotype/", opt$sex_label, 
+                   "/", opt$phenocode, ".txt"), header = F)[, 1]
+cov_coef <- fread2(paste0("/disk/validationSet/coef/", opt$sex_label, 
+                          "/", opt$phenocode, ".txt"),header = F)[, 1]
+covar <- fread2(paste0("/disk/validationSet/phenotype/", opt$sex_label,
+                       "/cov.txt")) %>% as.matrix %>% cbind(1, .)
+covar <- covar %*% cov_coef
+
+if (!file.exists(paste0("/disk/validationSet/genotype/", opt$sex_label, 
+                        "/merge_imp.rds")))
+  snp_readBed(paste0("/disk/validationSet/genotype/", opt$sex_label, 
+                     "/merge_imp.bed"))
+val_bed <- snp_attach(paste0("/disk/validationSet/genotype/", opt$sex_label, 
+                             "/merge_imp.rds"))
 val_sub_str <- paste0(TEMP_DIR, "/val_sub-", as.numeric(as.POSIXlt(Sys.time())))
 if (any(is.na(y))){
   
@@ -187,10 +193,4 @@ write.table(snp_sig_CT, file = paste0(opt$output,"/esteff.txt"),
             col.names = F, row.names = F, quote = F)
 
 # remove file
-# system(paste0("rm ", ref_sub_str, ".bk"))
-# system(paste0("rm ", ref_sub_str, ".rds"))
-# system(paste0("rm ", val_sub_str, ".bk"))
-# system(paste0("rm ", val_sub_str, ".rds"))
-# system(paste0("rm ", ct_bk_str, ".bk"))
-# system(paste0("rm ", ct_bk_str, ".rds"))
 system(paste0("rm -r ", TEMP_DIR))
