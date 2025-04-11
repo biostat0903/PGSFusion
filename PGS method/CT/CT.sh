@@ -41,11 +41,9 @@ then
 	else
 		sex_label=$sex
 	fi
-	cov=/disk/validationSet/coef/${sex_label}/${phenocode}.txt
-	${Rscript} ${CT}  --summ ${Summary_stat} --val_phenotype ${val_phenotype} \
-					  --val_genotype ${val_genotype} --reference ${ref_panel} \
+	${Rscript} ${CT}  --summ ${Summary_stat} --phenocode ${phenocode} \
+					  --dat ${dat_type} --sex_label ${sex_label} --reference ${ref_panel} \
 					  --window ${window_size} --r2 ${r2} --plen ${plen}\
-					  --dat ${dat_type} --cov ${cov}\
 					  --output ${outpath} --jobid ${jobid}
 else
 	echo 'PGSFusion does not support EAS/AFR for CT model!'
