@@ -149,7 +149,7 @@ source(paste0(CODE_PATH, "viz_fun.R"))
 trait_label = "Weight"
 
 
-perform_plt <- plyr::alply(c("DBSLMM_TUNING", "DBSLMM_LMM", "DBSLMM_AUTO"), 
+perform_plt <- plyr::alply(c("DBSLMM_TUNING", "DBSLMM_AUTO", "DBSLMM_LMM"), 
                            1, function(method){
                         
   PGS_test_res <- readRDS(paste0(PATH, "/", method, "/PGS_test_res.rds"))
