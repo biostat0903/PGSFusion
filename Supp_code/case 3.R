@@ -169,7 +169,7 @@ cov_test_na <- cov_test[!is.na(pheno_test), -1]
 p_type = "gaussian"
 n = nx = 5
 
-PGS_trend_plt <- plyr::alply(c("DBSLMM_TUNING", "DBSLMM_LMM", "DBSLMM_AUTO"), 
+PGS_trend_plt <- plyr::alply(c("DBSLMM_TUNING", "DBSLMM_AUTO", "DBSLMM_LMM"), 
                            1, function(method){
   PGS_test_res <- readRDS(paste0(PATH, "/", method, "/PGS_test_res.rds"))
 
