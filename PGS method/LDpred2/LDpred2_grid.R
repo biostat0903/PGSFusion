@@ -46,6 +46,7 @@ opt = parse_args(opt_parser)
 TEMP_DIR <- paste0("/root/reference/intermediate_file/", opt$jobid)
 # TEMP_DIR="/public/home/biostat03/project/pgsfusionProject/tmp"
 p_len <- 21
+# p_len <- 3
 
 # QC for summary statistics and hm3 file
 map <- transmute(readRDS(paste0(opt$reference,"/map_hm3_plus.rds")),
@@ -62,7 +63,7 @@ if (opt$ncase != 0){
   neff <- sumstats[1, 4] + sumstats[1, 5]
   sumstats <- sumstats[, c(1, 3, 2, 6, 7, 8, 9, 10, 5)]
 }
-colnames(sumstats) <- c("chr", "pos", "rsid", "a0", "a1", "freq", "beta", "beta_se", "n_eff")
+colnames(sumstats) <- c("chr", "pos", "rsid", "a1", "a0", "freq", "beta", "beta_se", "n_eff")
 
 # Fit model for each chromosome
 esteff <- alply(c(1: 22), 1, function(CHR) {
@@ -85,8 +86,8 @@ esteff <- alply(c(1: 22), 1, function(CHR) {
   corr_sub <- as_SFBM(corr_sub, ref_sub_str, compact = T)
   p_seq <- signif(seq_log(1e-5, 1, length.out = p_len), 2)
   # h_seq <- pmax(ldsc[2], 0.0001)
-  # params <- expand.grid(p = p_seq, h2 = h_seq, 
-                        # sparse = FALSE)
+  # params <- expand.grid(p = p_seq, h2 = h_seq,
+  #                       sparse = FALSE)
   h_seq <- pmax(ldsc[2], 0.0001) * c(0.7, 1, 1.4)
   params <- expand.grid(p = p_seq, h2 = h_seq,
                         sparse = c(FALSE, TRUE))
@@ -96,7 +97,8 @@ esteff <- alply(c(1: 22), 1, function(CHR) {
                                 ncores = 1)
   ## validation
   y <- fread2(opt$val_phenotype, header = F)[, 1]
-  covar <- fread2(opt$cov, header = F)[, 1]
+  if (!is.null(opt$cov))
+    covar <- fread2(opt$cov, header = F)
   geno_chr <- paste0(opt$val_genotype, "/chr", CHR)
   if (!file.exists(paste0(geno_chr, ".rds")))
     
@@ -115,7 +117,7 @@ esteff <- alply(c(1: 22), 1, function(CHR) {
     # y=y-1
     if (exists('covar'))
       
-      covar <- covar[row_idx]
+      covar <- covar[row_idx, ]
   } else {
     
     val_sub_bed <- snp_attach(snp_subset(val_bed, 
@@ -144,7 +146,8 @@ esteff <- alply(c(1: 22), 1, function(CHR) {
     
     if (opt$dat == "quantitative"){
       params_na[c("coef", "score")] <- big_univLinReg(big_copy(pred_grid_na), 
-                                                      y)[c("estim", "score")]
+                                                      y, 
+                                                      covar.train = as.matrix(covar))[c("estim", "score")]
       params_na$idx_val <- apply(pred_grid_na, 2, function(a) cor(a, y)^2)
     } else {
       params_na[c("coef", "score")] <- big_univLinReg(big_copy(pred_grid_na), 
