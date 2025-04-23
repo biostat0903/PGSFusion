@@ -18,8 +18,9 @@ Summary_stat2=`sed -n '8p' ${Summary} | sed 's/^[^\t]\+[\t]\+//'`
 ancestry=`sed -n '3p' ${Summary} | sed 's/^[^\t]\+[\t]\+//'`
 if [ $ancestry = 'EUR' ]; then
 	ref_panel=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/merge_imp
-else 
-	ref_panel=/disk/reference_pgsfusion/1kg/${ancestry}/h3_imp/merge_imp
+	# ref_panel=/disk/reference_pgsfusion/1kg/EUR/hm3_imp/merge_imp
+else
+	ref_panel=/disk/reference_pgsfusion/1kg/${ancestry}/hm3_imp/merge_imp
 fi
 r2=`sed -n '1p' ${parameter} | sed 's/^[^\t]\+[\t]\+//'`
 pval=`sed -n '2p' ${parameter} | sed 's/^[^\t]\+[\t]\+//'`
@@ -40,7 +41,7 @@ nmis2=`sed -n "2p" ${Summary_stat2} | awk '{print $4}'`
 n2=$(echo "${nobs2}+${nmis2}" | bc -l)
 
 # Estimate genetic correlation
-Rscript=/root/anaconda3/envs/pgscalc/bin/Rscript
+Rscript=/root/anaconda3/envs/pgscalc2/bin/Rscript
 cal_v=/root/pgsfusion/mtPGS/mtPGS_v.R
 ${Rscript} ${cal_v} --summ1 ${Summary_stat1} --summ2 ${Summary_stat2} \
 					--nsin ${nsin} --output ${outpath} --anc ${ancestry}
@@ -65,5 +66,6 @@ rm -rf ${outpath}/test_clumping_result.log
 rm -rf ${outpath}/test_clumping_result.nosex
 rm -rf ${outpath}/test_LRT_output.txt
 rm -rf ${outpath}/test_l_snp_list.txt
+rm -rf ${outpath}/test_clumping_result.clumped
 rm -rf ${outpath}/esteff_mtPGS_target.txt
-rm -rf ${outpath}/esteff_mtPGS_relevant
+rm -rf ${outpath}/esteff_mtPGS_relevant.txt
