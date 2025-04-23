@@ -5,8 +5,8 @@ while getopts ":s:p:j:" opt; do
     ;;
     p) parameter="$OPTARG"
     ;;
-	j) jobid="$OPTARG"
-	;;
+    j) jobid="$OPTARG"
+    ;;
     \?) echo "Invalid option -$OPTARG" >&2
     ;;
   esac
@@ -28,7 +28,7 @@ val_genotype=`sed -n '4p' ${parameter}| sed 's/^[^\t]\+[\t]\+//'`
 outpath=`echo "$parameter" | awk -F'/parameter.txt' '{print $1}'`
 
 # Set CT method
-Rscript=/root/anaconda3/envs/pgscalc/bin/Rscript
+Rscript=/root/anaconda3/envs/pgscalc2/bin/Rscript
 CT=/root/pgsfusion/CT/CT.R
 
 # Run CT
