@@ -29,7 +29,7 @@ fi
 
 # Run LDpred2-auto
 LDpred2=/root/pgsfusion/LDpred2/LDpred2_auto.R
-Rscript=/root/anaconda3/envs/pgscalc/bin/Rscript
+Rscript=/root/anaconda3/envs/pgscalc2/bin/Rscript
 outpath=`echo "$Summary" | awk -F'/summary' '{print $1}'`
 ${Rscript} ${LDpred2}  --summ ${Summary_stat} \
                        --reference ${ref_panel} \
