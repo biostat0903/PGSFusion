@@ -1,10 +1,12 @@
 # Load packages
 library(plyr)
+library(dplyr)
 library(stringr)
 library(bigstatsr)
 library(bigsnpr)
 library(bigreadr)
-library(tidyverse)
+library(purrr)
+library(tidyr)
 library(optparse)
 
 # Input parameters
@@ -34,13 +36,13 @@ opt_parser = OptionParser(option_list=args_list)
 opt = parse_args(opt_parser)
 
 # opt <- list(summ = "/home/chencao_pgs/website/pgsfusion-server/job/f4de6a6da78a4c09a727d3647de9e52b/trait1.txt",
-#             phenocode = "PFIDB2006", 
+#             phenocode = "PFIDB2006",
 #             dat = "binary",
 #             sex_label = "All",
 #             reference = "/disk/reference_pgsfusion/EUR_UKB_ref",
-#             window = 50,
-#             r2 = 0.1,
-#             plen = 3,
+#             window = "50,100,200,500",
+#             r2 = "0.01,0.05,0.1,0.2,0.5,0.8,0.95",
+#             plen = 50,
 #             output = "/home/chencao_pgs/website/pgsfusion-server/job/f4de6a6da78a4c09a727d3647de9e52b",
 #             jobid = "f4de6a6da78a4c09a727d3647de9e52b")
 
@@ -72,7 +74,7 @@ sumstats <- sumstats[, c(1, 3, 2, 6, 7, 8, 9, 10, 5)]
 t <- sumstats$beta/sumstats$se
 p_val <- ifelse(t < 0, pnorm(t), pnorm(t, lower.tail = F))*2
 sumstats$pval <- ifelse(p_val == 0, min(p_val[-which(p_val==0)]), p_val)
-colnames(sumstats) <- c("chr", "pos", "rsid", "a0", "a1", "freq", 
+colnames(sumstats) <- c("chr", "pos", "rsid", "a1", "a0", "freq", 
                         "beta", "beta_se", "n_eff", "pval")
 df_beta <- as_tibble(snp_match(sumstats, map,
                                return_flip_and_rev = TRUE))
@@ -179,7 +181,7 @@ if (opt$dat == "quantitative"){
   ncores = 1
   )
 }
-max_prs <- grid2 %>% arrange(desc(valIdx)) %>% dplyr::slice(1)
+max_prs <- grid2 %>% arrange(desc(valIdx)) %>% slice(1)
 c_idx <- c(1: nrow(df_beta)) %in% unlist(map(all_keep, max_prs$id))
 t_idx <- c(1: nrow(df_beta)) %in% which(lp_val >= 0.999999*max_prs$thr.lp)
 idx <- ifelse(c_idx == T & t_idx == T, T, F)
@@ -188,9 +190,9 @@ snp_sig_CT <- data.frame(rsid = df_beta$rsid[idx],
                          beta = df_beta$beta[idx],
                          pos = df_beta$pos[idx])
 
-# output
+# Output
 write.table(snp_sig_CT, file = paste0(opt$output,"/esteff.txt"),
             col.names = F, row.names = F, quote = F)
 
-# remove file
+# Remove file
 system(paste0("rm -r ", TEMP_DIR))
