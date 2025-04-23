@@ -5,8 +5,8 @@ while getopts ":s:p:j:" opt; do
     ;;
     p) parameter="$OPTARG"
     ;;
-	j) jobid="$OPTARG"
-	;;
+    j) jobid="$OPTARG"
+    ;;
     \?) echo "Invalid option -$OPTARG" >&2
     ;;
   esac
@@ -34,7 +34,7 @@ pheno_type=`sed -n '3p' ${parameter}| sed 's/^[^\t]\+[\t]\+//'`
 outpath=`echo "$parameter" | awk -F'/parameter.txt' '{print $1}'`
 
 # Set LDpred2 method
-Rscript=/root/anaconda3/envs/pgscalc/bin/Rscript
+Rscript=/root/anaconda3/envs/pgscalc2/bin/Rscript
 LDpred2=/root/pgsfusion/LDpred2/LDpred2_grid.R
 
 # Run LDpred2
@@ -48,7 +48,7 @@ then
 	else
     		sex_label="$sex"
 	fi
-	cov=/disk/validationSet/coef/${sex_label}/${phenocode}.txt
+	cov=/disk/validationSet/phenotype/${sex_label}/cov.txt
 	${Rscript} ${LDpred2}  --summ ${Summary_stat} --val_phenotype ${val_phenotype} \
 						   --val_genotype ${val_genotype} --reference ${ref_panel} \
 						   --dat ${dat_type}  --ncase ${n_case} \
