@@ -21,6 +21,11 @@ The user can use the server to visit the website: [http://www.pgsfusion.net/#/](
 + We provide two further applications: i) performance evaluation; ii) joint analysis. <br>
 
 ## Update log
+### Version 4.0 (Apr 2025)
++ Create new Conda environment <em>pgscalc2</em>. <br>
++ Use top 18 genetic PC to correct population structure. <br>
++ Change the EAS test set with 1419 individuals. <br>
++ Add the linkage of each method in Manual page. <br>
 ### Version 3.0 (Jan 2025)
 + Add the number of quantitative and binary traits <br>
 + Update [DBSLMM](https://github.com/biostat0903/DBSLMM) (v1.0) <br>
