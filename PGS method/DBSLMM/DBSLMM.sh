@@ -38,6 +38,7 @@ DB_path=/root/biosoft/DBSLMM/
 if [ $ancestry = "EUR" ]
 then
 	ref_panel=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/
+	# ref_panel=/disk/reference_pgsfusion/1kg/EUR/hm3_imp/
 	if [ "$sex" = "Mixed" ]
 	then
     		sex_label="All"
@@ -45,27 +46,20 @@ then
     		sex_label="$sex"
 	fi
 	cov=/disk/validationSet/phenotype/${sex_label}/cov.txt
-	Rscript=/root/anaconda3/envs/dbslmm/bin/Rscript
+	Rscript=/root/anaconda3/envs/pgscalc2/bin/Rscript
 	${Rscript} ${DB_path}/DBSLMM.R --summary ${Summary_stat} --dbslmm ${DB_path}/dbslmm \
 	 							   --type tuning --model DBSLMM --block ${BLOCK} \
 	 							   --reference ${ref_panel} --N ${N} --h2f 0.8,1,1.2 \
 	 							   --outPath ${outpath}/
 	Summary_prefix=$(basename "$Summary_stat" .txt)
-	# ${Rscript} ${DB_path}/TUNE.R --summary ${Summary_stat} --dbslmm_eff "$outpath"/${Summary_prefix}\
-								 # --h2f 0.8,1,1.2  --cov ${cov}\
-								 # --validation_g ${val_genotype}/merge_imp --validation_p ${val_phenotype}
 	${Rscript} ${DB_path}/TUNE.R --summary ${Summary_stat} --dbslmm_eff "$outpath"/${Summary_prefix}\
-								 --h2f 0.8,1,1.2  --cov ${cov}\
+								 --h2f 0.8,1,1.2 --cov ${cov}\
 								 --validation_g ${val_genotype}/ --validation_p ${val_phenotype}
 	cat "$outpath"/"$Summary_prefix"_chr{1..22}_best.dbslmm.txt > ${outpath}/esteff.txt
 	# Process results
 	PROCEFF=/root/pgsfusion/procEffect.R
 	${Rscript} ${PROCEFF} --method DBSLMM --esteff ${outpath}/esteff.txt --summ ${Summary_stat}
 	rm -rf ${outpath}/${Summary_prefix}_chr*
-
 else
 	echo 'PGSFusion does not support EAS/AFR for DBSLMM model!'
 fi
-
-
-
