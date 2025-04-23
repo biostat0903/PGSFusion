@@ -24,24 +24,25 @@ outpath=`echo "$parameter" | awk -F'/parameter.txt' '{print $1}'`
 # outpath=/home/chencao_pgs/website/pgsfusion-server/job/14bb978f52a1468f9c9740c3e5bc8b85/SBAYESRC/
 
 Summary_prefix=`basename $Summary_stat`
-awk '(NR>1){snp=$2;a1=$6;a2=$7;fq=$8;beta=$9;bse=$10;pval=$10;N=($4+$5)}{print snp, a1, a2, fq, beta, bse, pval, N}(NR==1){print "SNP A1 A2 freq b se p N"}' ${Summary_stat} > ${outpath}/${Summary_prefix}
+awk '(NR>1){snp=$2;a1=$6;a2=$7;fq=$8;beta=$9;bse=$10;pval=$11;N=($4+$5)}{print snp, a1, a2, fq, beta, bse, pval, N}(NR==1){print "SNP A1 A2 freq b se p N"}' ${Summary_stat} > ${outpath}/${Summary_prefix}
 sed -i '1d' ${outpath}/${Summary_prefix}
 sed -i 's/ /	/g' ${outpath}/${Summary_prefix}
 
 # Fit SBayesRC
 annot=/disk/reference_pgsfusion/annot_baseline2.2.txt
-Rscript=/root/anaconda3/envs/pgscalc/bin/Rscript
-${Rscript} -e "SBayesRC::tidy(mafile='${outpath}/${Summary_prefix}', LDdir='$reference', \
+Rscript1=/root/anaconda3/envs/sbayesrc/bin/Rscript
+${Rscript1} -e "SBayesRC::tidy(mafile='${outpath}/${Summary_prefix}', LDdir='$reference', \
                output='${outpath}/summary_tidy.ma', log2file=TRUE)"
-${Rscript} -e "SBayesRC::impute(mafile='${outpath}/summary_tidy.ma', LDdir='$reference', \
-			   output='${outpath}/summary_imp.ma', log2file=TRUE)"
-${Rscript} -e "SBayesRC::sbayesrc(mafile='${outpath}/summary_imp.ma', LDdir='$reference', \
+${Rscript1} -e "SBayesRC::impute(mafile='${outpath}/summary_tidy.ma', LDdir='$reference', \
+			    output='${outpath}/summary_imp.ma', log2file=TRUE)"
+${Rscript1} -e "SBayesRC::sbayesrc(mafile='${outpath}/summary_imp.ma', LDdir='$reference', \
                outPrefix='${outpath}/summary_sbrc', annot='$annot', log2file=TRUE)"
 			  #  niter=10, burn=5)"
 
 # Format output
 PROCEFF=/root/pgsfusion/procEffect.R
-${Rscript} ${PROCEFF} --method SBayesRC \
+Rscript2=/root/anaconda3/envs/pgscalc2/bin/Rscript
+${Rscript2} ${PROCEFF} --method SBayesRC \
 					  --esteff ${outpath}/summary_sbrc.txt \
 					  --summ ${Summary_stat}
 
@@ -50,4 +51,3 @@ ${Rscript} ${PROCEFF} --method SBayesRC \
  rm -rf ${outpath}/summary_tidy.*
  rm -rf ${outpath}/summary_imp.*
  rm -rf ${outpath}/summary_sbrc.*
-
