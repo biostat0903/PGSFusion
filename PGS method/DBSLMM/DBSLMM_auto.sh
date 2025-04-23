@@ -16,9 +16,10 @@ printf "\033[33mArgument parameter is %s  \033[0m\n" "$parameter"
 Summary_stat=`sed -n '2p' ${Summary} | sed 's/^[^\t]\+[\t]\+//'`
 ancestry=`sed -n '3p' ${Summary} | sed 's/^[^\t]\+[\t]\+//'`
 if [ $ancestry = 'EUR' ]; then
-	ref_panel=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/
+	# ref_panel=/disk/reference_pgsfusion/EUR_UKB_ref-archive/hm3_imp/
+	ref_panel=/disk/reference_pgsfusion/1kg/EUR/hm3_imp/
 else 
-	ref_panel=/disk/reference_pgsfusion/1kg/${ancestry}/
+	ref_panel=/disk/reference_pgsfusion/1kg/${ancestry}/hm3_imp/
 fi
 BLOCK=/disk/reference_pgsfusion/genome_block/${ancestry}/
 nobs=`sed -n "2p" ${Summary_stat} | awk '{print $5}'`
@@ -44,3 +45,4 @@ PROCEFF=/root/pgsfusion/procEffect.R
 ${Rscript} ${PROCEFF} --method DBSLMM --esteff ${outpath}/esteff.txt --summ ${Summary_stat}
 rm -rf ${outpath}/${Summary_prefix}_chr*
 rm -rf ${outpath}/merge_sub-*
+
