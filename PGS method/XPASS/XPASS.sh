@@ -18,22 +18,29 @@ Summary_stat2=`sed -n '8p' ${Summary} | sed 's/^[^\t]\+[\t]\+//'`
 ancestry1=`sed -n '3p' ${Summary} | sed 's/^[^\t]\+[\t]\+//'`
 ancestry2=`sed -n '9p' ${Summary} | sed 's/^[^\t]\+[\t]\+//'`
 outpath=`echo "$parameter" | awk -F'/parameter.txt' '{print $1}'`
-if [ '$ancestry1' = 'EUR' ]; then
+
+if [ "$ancestry1" = 'EUR' ]; then
 	ref1=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/merge_imp
 	ref2=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/merge_imp
 	pc1=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/PC5.txt
 	pc2=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/PC5.txt
 else
 	ref1=/disk/reference_pgsfusion/1kg/${ancestry1}/hm3_imp/merge_imp
-  pc1=/disk/reference_pgsfusion/1kg/${ancestry1}/hm3_imp/PC5.txt
-  if [ '$ancestry2' = 'EUR' ]; then
-	  ref2=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/merge_imp
-    pc2=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/PC5.txt
-  else
-    ref2=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/merge_imp
-    pc2=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/PC5.txt
-  fi
+ 	pc1=/disk/reference_pgsfusion/1kg/${ancestry1}/hm3_imp/PC5.txt
+  	if [ "$ancestry2" = EUR ]; then
+		ref2=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/merge_imp
+    	pc2=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/PC5.txt
+  	else
+    	ref2=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/merge_imp
+    	pc2=/disk/reference_pgsfusion/1kg/${ancestry2}/hm3_imp/PC5.txt
+  	fi
 fi
+
+#echo "$ref1"
+#echo "$ref2"
+#echo "$pc1"
+#echo "$pc2"
+#exit 1
 
 # Get N
 nobs1=`sed -n "2p" ${Summary_stat1} | awk '{print $5}'`
@@ -54,7 +61,7 @@ awk '{print $2, $13, $12, $6, $7}' ${outpath}/summ21.txt > ${outpath}/summ2.txt
 sed -i '1s/.*/SNP N Z A1 A2/' ${outpath}/summ2.txt
 
 # Fit XPASS
-Rscript=/root/anaconda3/envs/pgscalc/bin/Rscript
+Rscript=/root/anaconda3/envs/pgscalc2/bin/Rscript
 XPASS=/root/pgsfusion/XPASS/XPASS.R
 ${Rscript} ${XPASS} --summ1 ${outpath}/summ1.txt --summ2 ${outpath}/summ2.txt \
                     --ref1 ${ref1} --ref2 ${ref2} \
