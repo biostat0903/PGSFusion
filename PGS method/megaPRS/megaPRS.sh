@@ -10,7 +10,6 @@ while getopts ":s:p:" opt; do
   esac
 done
 printf "\033[33mArgument Summary is %s  \033[0m\n" "$Summary"
-printf "\033[33mArgument parameter is %s  \033[0m\n" "$parameter"
 
 # Set parameters
 Summary_stat=`sed -n '2p' ${Summary} | sed 's/^[^\t]\+[\t]\+//'`
@@ -32,17 +31,16 @@ ${LDAK} --mega-prs ${outpath}/megabayesr --model bayesr \
 		--power .25 --allow-ambiguous YES --check-sums NO
 
 # Format output
-Rscript=/root/anaconda3/envs/pgscalc/bin/Rscript
+Rscript=/root/anaconda3/envs/pgscalc2/bin/Rscript
 PROCEFF=/root/pgsfusion/procEffect.R
 ${Rscript} ${PROCEFF} --method megaPRS \
 					  --esteff ${outpath}/megabayesr.effects \
 					  --summ ${Summary_stat}
 
 # Remove files
-sudo rm ${outpath}/quant.summaries
-sudo rm ${outpath}/megabayesr.best
-sudo rm ${outpath}/megabayesr.cors
-sudo rm ${outpath}/megabayesr.parameters
-sudo rm ${outpath}/megabayesr.probs
-sudo rm ${outpath}/megabayesr.progress
-sudo rm ${outpath}/megabayesr.effects
+rm -rf ${outpath}/megabayesr.best
+rm -rf ${outpath}/megabayesr.cors
+rm -rf ${outpath}/megabayesr.parameters
+rm -rf ${outpath}/megabayesr.probs
+rm -rf ${outpath}/megabayesr.progress
+rm -rf ${outpath}/megabayesr.effects
