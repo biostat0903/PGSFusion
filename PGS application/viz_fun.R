@@ -13,7 +13,6 @@ GROUP_COL <- c("#A5170E", "#1965B0", "#F4A736", "#4EB265",
               "#E6BEFF", "#9A6324", "#FFFAC8", "#800000")
 ROC_COL <- c("#E41A1C","#377EB8")
 
-
 # Function 1: test for R2 or AUC
 perform.test <- function(pheno = NULL, 
                          pred = NULL,
@@ -36,7 +35,9 @@ perform.test <- function(pheno = NULL,
 # Function 2: density plot
 dens.plt <- function(pheno = NULL,
                      pred = NULL,
-                     type = "gaussian"
+                     trait_label = NULL,
+                     type = "gaussian", 
+                     annot_out = FALSE
 ){
   
   # R square
@@ -44,42 +45,48 @@ dens.plt <- function(pheno = NULL,
                      pred = pred, 
                      type = type)[["perform"]][1] %>% round(4)
   datt <- data.frame(Value = c(pheno, pred),
-                     Group = c(rep("Trait", length(pheno)),
-                               rep("PGS", length(pred))))
+                     Group = factor(c(rep(trait_label, length(pheno)),
+                                      rep("PGS", length(pred))), 
+                                    levels = c(trait_label, "PGS")))
   anno_lab <- bquote(italic(R)^2~"="~.(r2))
   # plot
   plt <- ggplot(datt) +
-    geom_density(aes(x = Value, fill = Group),
+    geom_density(aes(x = Value, fill = Group, color = Group),
                  alpha = 0.2, size = 0.6) +
     scale_fill_manual(values = ROC_COL) + 
-    annotate("text", 
-             x = 0, y = 0.5, 
-             size = 5, colour="grey10",
-             label = anno_lab) + 
+    scale_color_manual(values = ROC_COL) +
     ylab("Density") + xlab("") +
-    theme_bw() + 
-    theme(legend.position = "right",
+    theme_bw() +
+    theme(legend.position = "inside",
+          legend.position.inside=c(.8, .9), 
           panel.grid = element_blank(),
           legend.title = element_text(size = 12, face = "bold", color = "black"),
           legend.text = element_text(size = 10, color = "black"),
           title = element_text(size = 15, face = "bold", color = "black"),
           axis.text = element_text(size = 12, color = "black"),
           axis.title = element_text(size = 15, face = "bold", color = "black"))
+  if (annot_out) 
+    plt <- plt + 
+      annotate("text", colour="grey10", label = anno_lab,
+               x = 0, y = 0.5, size = 5)
   return(plt)
 }
 
 # Function 3: ROC plot
 roc.plt <- function(pheno = NULL,
                     pred = NULL,
-                    type = "b"
+                    trait_label = NULL, 
+                    type = "b", 
+                    annot_out = FALSE
 ){
   
   # AUC
   perform_test <- perform.test(pheno = pheno, 
                                pred = pred, 
                                type = type)
-  auc_vec <- perform_test[["perform"]] %>% round(2)
-  auc <- paste0("AUC: ", 
+  auc_vec <- perform_test[["perform"]] %>% round(4)
+  auc <- paste0("AUC of ",
+                trait_label, ": ",
                 auc_vec[1] , "(",
                 auc_vec[2], "~", 
                 auc_vec[3], ")")
@@ -92,11 +99,7 @@ roc.plt <- function(pheno = NULL,
     geom_line(aes(x = rev_specificity, y = sensitivity), 
               color = "#4DAF4A", linetype = 2, size = 1.3) +
     geom_abline(slope = 1, intercept = 0, 
-                color = "grey10", linetype = 2) + 
-    annotate("text", 
-             x = 0.7, y = 0.2, 
-             size = 5, colour="grey10",
-             label = auc) + 
+                color = "grey10", linetype = 2)  + 
     xlab("1-Specificity") + ylab("Sensitivity") +
     theme_bw() + 
     theme(axis.title = element_text(size = 15, face = "bold"),
@@ -104,14 +107,17 @@ roc.plt <- function(pheno = NULL,
           panel.grid = element_blank(),
           legend.text = element_text(size = 10),
           legend.title = element_text(size = 12, face = "bold"))
-  
+  if (annot_out) 
+    plt <- plt + annotate("text", colour="grey10", label = auc,
+               x = 0.7, y = 0.2, size = 5)
   return(plt)
 }
 
 # Function 4: PGS trend plot 
 PGS.trend.plt <- function(datt = NULL,
                           n = NULL,
-                          type = "gaussian"
+                          type = "gaussian", 
+                          eff_out = FALSE
 ){
   
   ## fit model
@@ -167,15 +173,21 @@ PGS.trend.plt <- function(datt = NULL,
     xlab(x_lab) + ylab(y_lab) +
     ggtitle(title_lab) + 
     theme_bw() + 
-    theme(axis.text = element_text(size = 12, color = "black"),
+    theme(axis.text.x = element_text(size = 12, color = "black"),
+          axis.text.y = element_blank(),
           axis.title = element_text(size = 15, face = "bold", color = "black"),
           title = element_text(size = 15, face = "bold", color = "black"))
+  if(eff_out)
+    plt <- plt + 
+      theme(axis.text.y = element_text(size = 12, color = "black"))
+  
   return(plt)
 }
 
 # Function 5: PGS in strata plot
 PGS.strata.plt <- function(datt = NULL,
-                           strata_var = NULL
+                           strata_var = NULL, 
+                           eff_out = FALSE
 ){
   
   # plot parameters
@@ -213,8 +225,12 @@ PGS.strata.plt <- function(datt = NULL,
     theme_bw() + 
     theme(legend.position = "none",
           title = element_text(size = 15, face = "bold", color = "black"),
-          axis.text = element_text(size = 12, color = "black"),
+          axis.text.x = element_text(size = 12, color = "black"),
+          axis.text.y = element_blank(),
           axis.title = element_text(size = 15, face = "bold", color = "black"))
+  if(eff_out)
+    plt <- plt + 
+        theme(axis.text.y = element_text(size = 12, color = "black"))
   
   return(plt)
 }
@@ -319,12 +335,12 @@ perform.strata.test <- function(pheno = NULL,
               "test" = perform_strata_test))
 }
 
-
 # Function 8: performance strata plot
 perform.strata.plt <- function(datt = NULL,
                                test = NULL,
                                type = "gaussian",
-                               strata_var = NULL
+                               strata_var = NULL, 
+                               perf_out = FALSE
 ){
   
   # plot parameters
@@ -354,32 +370,32 @@ perform.strata.plt <- function(datt = NULL,
     scale_color_manual(values = GROUP_COL) +
     theme_bw() + 
     theme(axis.text = element_text(size = 12, color = "black"),
+          axis.text.y = element_blank(),
           axis.title = element_text(size = 15, face = "bold", color = "black"),
           title = element_text(size = 15, face = "bold", color = "black"))
   ## add test
-  if (!is.null(test)) {
-    
-    plt <- plt +  
-      stat_pvalue_manual(test,
-                         label = "p.adj",
-                         tip.length = 0.01, 
-                         label.size = 4, 
-                         bracket.size = 0.6)
-  }
+  if (!is.null(test)) 
+    plt <- plt + stat_pvalue_manual(test, label = "p.adj", tip.length = 0.01, 
+                                    label.size = 4, bracket.size = 0.6)
+  if(perf_out)
+    plt <- plt + theme(axis.text.y = element_text(size = 15, face = "bold", color = "black"))
   return(plt)
 }
 
-
-# Function 9: effect strata plot
+# Function 9: effect strata data
 effect.strata.plt <- function(datt = NULL,
                               strata_var = NULL,
+			                        eff_out = FALSE,
                               model = "gaussian"
 ){
-  
+
   ## model parameters
   datt <- subset(datt, rowSums(is.na(datt)) == 0)
-  colnames(datt)[which(str_detect(colnames(datt),'NA') | is.na(colnames(datt)))]<-paste0('noname',
-                                                                                         which(str_detect(colnames(datt),'NA') | is.na(colnames(datt))))
+  colnames(datt)[which(str_detect(colnames(datt),'NA') | is.na(colnames(datt)))]<-paste0('noname',which(str_detect(colnames(datt),'NA') | is.na(colnames(datt))))
+  if (strata_var == "Sex")
+    datt$V2 <- NULL
+  if (strata_var == "Age_65")
+    datt$V1 <- NULL
   use_cov <- setdiff(colnames(datt), c("pheno", "Group", "PGS"))
   n_group <- length(unique(datt$Group))
   ## p value of interaction 
@@ -392,15 +408,19 @@ effect.strata.plt <- function(datt = NULL,
   p_plt <- p_all[grep("PGS:Group", names(p_all))] %>% 
     format(., scientific = T, digits = 4) %>%
     gsub("e", "E", .)
-  summ_ci <- confint(glm_cov_PGS_inter)
-  summ_out <- data.frame(effect = summary(glm_cov_PGS_inter)$coefficients[, 1] %>% round(.,4), 
-                         sd = summary(glm_cov_PGS_inter)$coefficients[, 2]%>% round(.,4), 
-                         CI_low = summ_ci[, 1] %>% round(.,4), 
-                         CI_high = summ_ci[, 2] %>% round(.,4), 
-                         P = summary(glm_cov_PGS_inter)$coefficients[, 4] %>% format(., scientific = T, digits = 4)) 
-  summ_out <- summ_out[grep("PGS|Group", row.names(summ_out)), ]
-  summ_out <- cbind.data.frame(Variable = c("PGS", strata_var, "Interaction"),
-                                summ_out)
+  summ_out <- summary(glm_cov_PGS_inter)$coefficients[, c(1, 2, 4)] %>% as.data.frame()
+  summ_out <- summ_out[grep("PGS|Group", row.names(summ_out)), ]  
+  colnames(summ_out) <- c("effect", "sd", "P")
+  summ_ci <- confint(glm_cov_PGS_inter, parm = c("PGS", "Group", "PGS:Group"), 
+                     type = "Wald")
+  summ_out$CI_low <- summ_ci[, 1] %>% round(.,4)
+  summ_out$CI_high <- summ_ci[, 2] %>% round(.,4)
+  summ_out_i <- data.frame(effect = summ_out$effect %>% round(.,4), 
+                           sd = summ_out$sd %>% round(.,4), 
+                           CI_low = summ_out$CI_low, 
+                           CI_high = summ_out$CI_high, 
+                           P = summ_out$P %>% format(., scientific = T, digits = 4)) 
+  summ_out_i <- cbind.data.frame(Variable = c("PGS", strata_var, "Interaction"), summ_out_i)
   anno_lab <- bquote(italic(P)[interaction]~"="~.(p_plt))
   
   ## fit model in each strata
@@ -408,22 +428,20 @@ effect.strata.plt <- function(datt = NULL,
                          paste(use_cov, collapse = " + "), " + ",
                          "PGS")
   est_PGS <- lapply(levels(datt$Group), function(gx){
+
     dattx <- subset(datt, datt$Group == gx)
     glm_cov_PGSx <- glm(fomu_cov_PGS, data = dattx, family = model)
-    
-    # format estimation
-    summ_coef_PGSx <- summary(glm_cov_PGSx)$coefficients["PGS", ]
-    est_PGSx <- c(summ_coef_PGSx[1],
-                  summ_coef_PGSx[1] - 1.96*summ_coef_PGSx[2],
-                  summ_coef_PGSx[1] + 1.96*summ_coef_PGSx[2])
+    est_PGSx <- c(summary(glm_cov_PGSx)$coefficients["PGS", 1], 
+                  confint(glm_cov_PGSx, parm = "PGS", type = "Wald"))
+
     return(est_PGSx)
   }) %>% Reduce("rbind", .) %>% as.data.frame()
   colnames(est_PGS) <- c("est", "lowCI", "highCI")
-  if (model == "binomial") {
+  if (model == "binomial") 
     est_PGS <- exp(est_PGS) %>% as.data.frame()
-  }
   est_PGS$Group <- levels(datt$Group) %>% factor(., levels = levels(datt$Group))
-  ## other parameters fro plot
+
+  ## other parameters for plot
   x_lab <- ""
   y_lab <- ifelse(model == "binomial", "OR (95% CI)", "Beta (95% CI)")
   title_lab <- paste0("Strata by ", strata_var)
@@ -436,7 +454,7 @@ effect.strata.plt <- function(datt = NULL,
     geom_errorbar(aes(ymin = lowCI, ymax = highCI),
                   size = 0.8, width = 0.2, color = "grey10") +
     annotate("text", 
-             x = n_group * 0.5, y = max(est_PGS$highCI)*1.1, 
+             x = n_group * 0.6, y = max(est_PGS$highCI)*1.1, 
              size = 5, colour="grey10",
              label = anno_lab) + 
     xlab(x_lab) + ylab(y_lab) +
@@ -444,17 +462,22 @@ effect.strata.plt <- function(datt = NULL,
     theme_bw() + 
     theme(legend.position = "none",
           title = element_text(size = 15, face = "bold", color = "black"),
-          axis.text = element_text(size = 12, color = "black"),
+          axis.text.x = element_text(size = 12, color = "black", angle = 45, 
+                                     hjust = 1, vjust = 1),
           axis.title = element_text(size = 15, face = "bold", color = "black"))
-  
-  return(list(plt, summ_out))
+  plt1 <- NULL
+  if(eff_out)
+    plt1 <- plt + theme(axis.text.y = element_text(size = 12, color = "black", angle = 45, 
+                                                  hjust = 1, vjust = 1))
+  return(list(plt, plt1, summ_out_i))
 }
 
 # Function 10: subgroup plot
 subgroup.plt <- function(datt = NULL,
                          type = NULL,
                          sub_var = NULL,
-                         eff_var = NULL
+                         eff_var = NULL, 
+                         eff_out = FALSE
 ){
   
   model <- ifelse(type == "gaussian", "gaussian", "binomial")
@@ -491,7 +514,6 @@ subgroup.plt <- function(datt = NULL,
     
     return(est_subx)
   }) %>% Reduce("rbind", .) %>% as.data.frame()
-  
   est_sub$eff_var <- factor(est_sub$eff_var, levels = levels(datt[[eff_var]]))
   est_sub$sub_var <- factor(est_sub$sub_var, levels = levels(datt[[sub_var]]))
   ##
@@ -503,9 +525,7 @@ subgroup.plt <- function(datt = NULL,
   sub_var_title <- ifelse(sub_var == "PGS_g", "PGS", sub_var)
   title_lab <- paste0("Effects of ", eff_var_title, " in different ", sub_var_title, " groups")
   ## plot
-  plt <- ggplot(est_sub, aes(x = sub_var, 
-                             y = est, 
-                             color = eff_var)) +
+  plt <- ggplot(est_sub, aes(x = sub_var, y = est, color = eff_var)) +
     geom_hline(yintercept = ref_y, 
                color = "grey50", 
                linetype = 2, 
@@ -520,20 +540,19 @@ subgroup.plt <- function(datt = NULL,
     xlab(x_lab) + ylab(y_lab) +
     ggtitle(title_lab) + 
     theme_bw() + 
-    theme(axis.text = element_text(size = 12, color = "black"),
+    theme(axis.text.x = element_text(size = 12, color = "black"),
+          axis.text.y = element_blank(),
           axis.title = element_text(size = 15, face = "bold", color = "black"),
           title = element_text(size = 15, face = "bold", color = "black"))
+  if(eff_out)
+    plt <- plt + theme(axis.text.y = element_text(size = 12, color = "black"))
   ## add color
   if (eff_var == "PGS_g") {
     
-    plt <- plt + 
-      scale_color_viridis_d()
-    
+    plt <- plt + scale_color_viridis_d()
   } else {
     
-    plt <- plt + 
-      scale_color_manual(values = GROUP_COL)
-    
+    plt <- plt + scale_color_manual(values = GROUP_COL)
   }
   est_sub_eff <- est_sub[which(est_sub$eff_var != levels(datt[[eff_var]])[1]),]
   est_sub_eff$eff_var_comb <- paste0(est_sub_eff$eff_var, 
@@ -547,8 +566,7 @@ subgroup.plt <- function(datt = NULL,
                                             "~",
                                             round(est_sub_eff$highCI, 3),
                                             ")"),
-                        P = round(est_sub_eff$P, 3))
-  
+                        P = formatC(est_sub_eff$P, format = "E", digits = 3))
   return(list("plt" = plt,
               "tab" = sub_tab))
 }
