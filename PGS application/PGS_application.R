@@ -23,7 +23,7 @@ opt = parse_args(opt_parser)
 # opt <- list(phenocode = "PFIDB2006",
 #            sex = "All",
 #            anc = "EUR",
-#            out_path = "/home/chencao_pgs/website/pgsfusion-server/job/f4de6a6da78a4c09a727d3647de9e52b/DBSLMM_LMM")
+#            out_path = "/home/chencao_pgs/website/pgsfusion-server/job/f4de6a6da78a4c09a727d3647de9e52b/PRSCS_AUTO")
 
 ## Set global variables
 TEST_PATH <- paste0("/disk/testSet/", opt$anc, '/')
@@ -101,27 +101,18 @@ source(paste0(CODE_PATH, "viz_fun.R"))
 ## 1.1 Overall consistency
 if (p_type == "gaussian") {
 
-  perform_all_plt_nonannot <- dens.plt(pheno = PGS_test_res$pheno,
-                                       pred = PGS_test_res$pheno_hat, 
-                                       trait_label = trait_label)
   perform_all_plt_annot <- dens.plt(pheno = PGS_test_res$pheno,
                                     pred = PGS_test_res$pheno_hat, 
                                     trait_label = trait_label, 
-                                    annot_out = T)
+                                    watermark = T)
 } else {
 
-  perform_all_plt_nonannot <- roc.plt(pheno = PGS_test_res$pheno,
-                                      pred = PGS_test_res$pheno_hat, 
-                                      trait_label = trait_label)
   perform_all_plt_annot <- roc.plt(pheno = PGS_test_res$pheno,
                                    pred = PGS_test_res$pheno_hat, 
                                    trait_label = trait_label, 
-                                   annot_out = T)
+                                   watermark = T)
 }
-ggsave(file = paste0(opt$out_path, "/out_performance/Performance.png"), 
-       perform_all_plt_nonannot, height = 6, width = 7,
-       units = "in", dpi = 300)
-ggsave(file = paste0(opt$out_path, "/in_performance/Performance.png"), 
+ggsave(file = paste0(opt$out_path, "/performance/Performance.png"), 
        perform_all_plt_annot, height = 6, width = 7,
        units = "in", dpi = 300)
 # pdf(paste0(opt$out_path, "/performance/Performance.pdf"),
@@ -146,20 +137,12 @@ PGS_trend_plt <- lapply(PGS_GROUP_LIST, function(nx){
   if (!is.null(cov_test_na))
     datt_plt <- cbind(datt_plt, cov_test_na)
   ## plot
-  PGS_trend_noeff_pltx <- PGS.trend.plt(datt = datt_plt, n = nx, type = p_type)
   PGS_trend_eff_pltx <- PGS.trend.plt(datt = datt_plt, n = nx, 
-                                      type = p_type, eff_out = TRUE)
+                                      type = p_type, watermark = TRUE) 
   ## save
-  out_noeff_filex <- paste0(opt$out_path, "/out_performance/Trend_PGS_group", nx, ".png")
-  ggsave(file = out_noeff_filex, PGS_trend_noeff_pltx, height = 6, width = 7,
-         units = "in", dpi = 300)
-  out_eff_filex <- paste0(opt$out_path, "/in_performance/Trend_PGS_group", nx, ".png")
+  out_eff_filex <- paste0(opt$out_path, "/performance/Trend_PGS_group", nx, ".png")
   ggsave(file = out_eff_filex, PGS_trend_eff_pltx, height = 6, width = 7,
          units = "in", dpi = 300)
-  # png(out_filex, height = 6, width = 7, units = "in", res = 300)
-  # # pdf(out_filex, height = 6, width = 7)
-  # print(PGS_trend_noeff_pltx)
-  # dev.off()
   message(paste0("MSG: Trend plot of PGS across ", nx, " groups is saved!"))
   return(nx)
 })
@@ -177,51 +160,38 @@ strata_res <- plyr::alply(strata_var, 1, function(varx){
   datt_strata <- datt_strata[which(datt_strata$Group != "NA"), ]
 
   ## 3.3 plot PGS in subgroups
-  PGS_strata_noeff_pltx <- PGS.strata.plt(datt = datt_strata, strata_var = varx)
-  PGS_strata_eff_pltx <- PGS.strata.plt(datt = datt_strata, strata_var = varx, 
-                                        eff_out = TRUE)
-  # save plot
-  out_PGS_noeff_filex <- paste0(opt$out_path, "/out_performance/PGS_subgroup_by_", varx, ".png")
-  ggsave(file = out_PGS_noeff_filex, PGS_strata_noeff_pltx, height = 6, width = 6,
-         units = "in", dpi = 300)
-  out_PGS_eff_filex <- paste0(opt$out_path, "/in_performance/PGS_subgroup_by_", varx, ".png")
+  PGS_strata_eff_pltx <- PGS.strata.plt(datt = datt_strata, 
+                                        strata_var = varx, 
+                                        watermark = TRUE)
+  out_PGS_eff_filex <- paste0(opt$out_path, "/performance/PGS_subgroup_by_", varx, ".png")
   ggsave(file = out_PGS_eff_filex, PGS_strata_eff_pltx, height = 6, width = 6,
          units = "in", dpi = 300)
   message(paste0("MSG: PGS plot by ", varx, " is saved!"))
-
   ## 3.4 plot effect in subgroups
   datt_perform_strata <- perform.strata.test(pheno = datt_strata$pheno,
                                              pred = datt_strata$pheno_hat,
                                              subgroup = datt_strata$Group,
                                              type = p_type)
-  perform_strata_noeff_plt <- perform.strata.plt(datt = datt_perform_strata$perform_strata,
-                                                 test = datt_perform_strata$test,
-                                                 type = p_type,
-                                                 strata_var = varx)
   perform_strata_eff_plt <- perform.strata.plt(datt = datt_perform_strata$perform_strata,
                                                test = datt_perform_strata$test,
                                                type = p_type,
-                                               strata_var = varx, 
-                                               perf_out = TRUE)
-  # save plot
-  plt_widx <- 3 + length(unique(datt_strata$Group))
-  out_perform_noeff_filex <- paste0(opt$out_path, "/out_performance/Performance_subgroup_by_", varx, ".png")
-  ggsave(file = out_perform_noeff_filex, perform_strata_noeff_plt, 
-         height = 5, width = plt_widx, units = "in", dpi = 300)
-  out_perform_eff_filex <- paste0(opt$out_path, "/in_performance/Performance_subgroup_by_", varx, ".png")
+                                               strata_var = varx,
+                                               watermark = TRUE)
+  plt_widx <- ifelse(length(levels(datt_strata$Group)) <= 3, 5, length(levels(datt_strata$Group)) + 2)
+  out_perform_eff_filex <- paste0(opt$out_path, "/performance/Performance_subgroup_by_", varx, ".png")
   ggsave(file = out_perform_eff_filex, perform_strata_eff_plt,
          height = 5, width = plt_widx, units = "in", dpi = 300)
   message(paste0("MSG: Performance plot grouped by ", varx, " is saved!"))
 
   return(cbind(varx, datt_perform_strata$perform_strata))
 }) %>% do.call("rbind", .)
-strata_out <- data.frame(Variable = strata_res$varx,
-                         Group = strata_res$Group,
-                         PGS_effect = round(strata_res$perform, 4),
-                         Low_CI = round(strata_res$lowCI, 4),
-                         High_CI = round(strata_res$highCI, 4))
-write.table(strata_out, file = paste0(opt$out_path, "/in_performance/Performance_subgroup.txt"),
-            row.names = F, quote = F, sep = "\t")
+# strata_out <- data.frame(Variable = strata_res$varx,
+#                          Group = strata_res$Group,
+#                          PGS_effect = round(strata_res$perform, 4),
+#                          Low_CI = round(strata_res$lowCI, 4),
+#                          High_CI = round(strata_res$highCI, 4))
+# write.table(strata_out, file = paste0(opt$out_path, "/performance/Performance_subgroup.txt"),
+#             row.names = F, quote = F, sep = "\t")
 
 
 
@@ -247,20 +217,17 @@ interaction_res <- plyr::alply(strata_var, 1, function(varx){
    effect_strata_resx  <- effect.strata.plt(datt = datt_strata_plt,
                                             strata_var = varx,
                                             model = p_type,
-                                            eff_out = TRUE)
+                                            watermark = TRUE)
    ### 3 output
    plt_widx <- nlevels(datt_strata_plt$Group) * 2
-   out_interaction_noeff_filex <- paste0(opt$out_path, "/out_jointeffect/Interaction_with_", varx, ".png")
-   ggsave(file = out_interaction_noeff_filex, effect_strata_resx[[1]],
-          height = 6, width = plt_widx, units = "in", dpi = 300)
-   out_interaction_eff_filex <- paste0(opt$out_path, "/in_jointeffect/Interaction_with_", varx, ".png")
-   ggsave(file = out_interaction_eff_filex, effect_strata_resx[[2]],
+   out_interaction_eff_filex <- paste0(opt$out_path, "/jointeffect/Interaction_with_", varx, ".png")
+   ggsave(file = out_interaction_eff_filex, effect_strata_resx[[1]],
           height = 6, width = plt_widx, units = "in", dpi = 300)
    message(paste0("MSG: Interaction plot with ", varx, " is saved!"))
-   return(effect_strata_resx[[3]])
+   return(effect_strata_resx[[2]])
 }) %>% do.call("rbind", .)
-write.table(interaction_res, file = paste0(opt$out_path, "/in_jointeffect/Interaction_result.txt"),
-            row.names = F, quote = F, sep = "\t")
+# write.table(interaction_res, file = paste0(opt$out_path, "/jointeffect/Interaction_result.txt"),
+#             row.names = F, quote = F, sep = "\t")
 
 ## 2.2 Subgroup analysis of PGS group and strata
 sub_pgsg_plt <- lapply(strata_var, function(varx){
@@ -305,31 +272,19 @@ sub_pgsg_plt <- lapply(strata_var, function(varx){
     #             sep = "\t", col.names = T, row.names = F, quote = F)
     # message(paste0("MSG: Subgroup analysis plot of PGS in group ", nx,
     #                " by ", varx, " is saved!"))
-
+    # source(paste0(CODE_PATH, "viz_fun.R"))
     ## sub PGS_g by Group
-    sub_noeff_plt2 <- subgroup.plt(datt = datt_sub_pltx, type = p_type,
-                                   sub_var = "PGS_g", eff_var = varx)
     sub_eff_plt2 <- subgroup.plt(datt = datt_sub_pltx, type = p_type,
                                  sub_var = "PGS_g", eff_var = varx, 
-                                 eff_out = TRUE)
+                                 watermark = TRUE)
     # output
     plt_widx <- 4 + max(nlevels(datt_sub_plt$Group), nx) * 1.3
-    out_subgroup_noeff_prefix2 <- paste0(opt$out_path, "/out_jointeffect/Subgroup_of_", varx, "_by_PGS_g", nx)
-    ggsave(paste0(out_subgroup_noeff_prefix2, ".png"), 
-           sub_noeff_plt2$plt, 
-           height = 5, width = plt_widx, units = "in", dpi = 300)
-    out_subgroup_eff_prefix2 <- paste0(opt$out_path, "/in_jointeffect/Subgroup_of_", varx, "_by_PGS_g", nx)
+    out_subgroup_eff_prefix2 <- paste0(opt$out_path, "/jointeffect/Subgroup_of_", varx, "_by_PGS_g", nx)
     ggsave(paste0(out_subgroup_eff_prefix2, ".png"), 
                   sub_eff_plt2$plt, 
            height = 5, width = plt_widx, units = "in", dpi = 300)
-    # png(paste0(out_subgroup_prefix2, ".png"),
-    #     height = 5, width = plt_widx, units = "in", res = 300)
-    # # pdf(paste0(out_subgroup_prefix2, ".pdf"),
-    # #     height = 5, width = plt_widx)
-    # print(sub_plt2$plt)
-    # dev.off()
-    write.table(sub_eff_plt2$tab, file = paste0(out_subgroup_eff_prefix2, ".txt"),
-                sep = "\t", col.names = T, row.names = F, quote = F)
+    # write.table(sub_eff_plt2$tab, file = paste0(out_subgroup_eff_prefix2, ".txt"),
+    #             sep = "\t", col.names = T, row.names = F, quote = F)
     message(paste0("MSG: Subgroup analysis plot of ", varx,
                    " by PGS in group ", nx, " is saved!"))
     return(nx)
