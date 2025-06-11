@@ -5,6 +5,7 @@ library(stringr)
 library(cocor)
 library(pROC)
 library(ggpubr)
+library(cowplot)
 
 # Set colors
 BAR_COL <- c("#FB8072", "#80B1D3", "#FDB462", "#CCCCFF", 
@@ -37,7 +38,7 @@ dens.plt <- function(pheno = NULL,
                      pred = NULL,
                      trait_label = NULL,
                      type = "gaussian", 
-                     annot_out = FALSE
+                     watermark = FALSE
 ){
   
   # R square
@@ -57,6 +58,8 @@ dens.plt <- function(pheno = NULL,
     scale_color_manual(values = ROC_COL) +
     ylab("Density") + xlab("") +
     theme_bw() +
+    annotate("text", colour="grey10", label = anno_lab,
+             x = 0, y = 0.5, size = 5) + 
     theme(legend.position = "inside",
           legend.position.inside=c(.8, .9), 
           panel.grid = element_blank(),
@@ -65,10 +68,10 @@ dens.plt <- function(pheno = NULL,
           title = element_text(size = 15, face = "bold", color = "black"),
           axis.text = element_text(size = 12, color = "black"),
           axis.title = element_text(size = 15, face = "bold", color = "black"))
-  if (annot_out) 
+  if (watermark)
     plt <- plt + 
-      annotate("text", colour="grey10", label = anno_lab,
-               x = 0, y = 0.5, size = 5)
+    draw_label("Created by PGSFusion\nUKBB application 144904",size = 30, angle = 50, 
+               color ="grey", alpha = 0.7)
   return(plt)
 }
 
@@ -77,7 +80,7 @@ roc.plt <- function(pheno = NULL,
                     pred = NULL,
                     trait_label = NULL, 
                     type = "b", 
-                    annot_out = FALSE
+                    watermark = FALSE
 ){
   
   # AUC
@@ -86,7 +89,7 @@ roc.plt <- function(pheno = NULL,
                                type = type)
   auc_vec <- perform_test[["perform"]] %>% round(4)
   auc <- paste0("AUC of ",
-                trait_label, ": ",
+                trait_label, ": \n",
                 auc_vec[1] , "(",
                 auc_vec[2], "~", 
                 auc_vec[3], ")")
@@ -102,14 +105,17 @@ roc.plt <- function(pheno = NULL,
                 color = "grey10", linetype = 2)  + 
     xlab("1-Specificity") + ylab("Sensitivity") +
     theme_bw() + 
+    annotate("text", colour="grey10", label = auc,
+               x = 0.7, y = 0.2, size = 5) +
     theme(axis.title = element_text(size = 15, face = "bold"),
           axis.text = element_text(size = 12, color = "black"),
           panel.grid = element_blank(),
           legend.text = element_text(size = 10),
           legend.title = element_text(size = 12, face = "bold"))
-  if (annot_out) 
-    plt <- plt + annotate("text", colour="grey10", label = auc,
-               x = 0.7, y = 0.2, size = 5)
+  if (watermark)
+    plt <- plt  + 
+    draw_label("Created by PGSFusion\nUKBB application 144904",size = 30, angle = 50, 
+               color ="grey", alpha = 0.7)
   return(plt)
 }
 
@@ -117,7 +123,7 @@ roc.plt <- function(pheno = NULL,
 PGS.trend.plt <- function(datt = NULL,
                           n = NULL,
                           type = "gaussian", 
-                          eff_out = FALSE
+                          watermark = FALSE
 ){
   
   ## fit model
@@ -173,21 +179,26 @@ PGS.trend.plt <- function(datt = NULL,
     xlab(x_lab) + ylab(y_lab) +
     ggtitle(title_lab) + 
     theme_bw() + 
-    theme(axis.text.x = element_text(size = 12, color = "black"),
-          axis.text.y = element_blank(),
+    theme(axis.text = element_text(size = 12, color = "black"),
           axis.title = element_text(size = 15, face = "bold", color = "black"),
           title = element_text(size = 15, face = "bold", color = "black"))
-  if(eff_out)
+  if (watermark)
+    
     plt <- plt + 
-      theme(axis.text.y = element_text(size = 12, color = "black"))
-  
+      annotate(geom = "text",
+               x = median(est_PGS_g$Group), 
+               y = mean(c(min(est_PGS_g$lowCI), max(est_PGS_g$highCI))), 
+               label = 'Created by PGSFusion\nUKBB application 144904', 
+               color = 'grey', angle = 45, 
+               size = 10, alpha = 0.5)
+   
   return(plt)
 }
 
 # Function 5: PGS in strata plot
 PGS.strata.plt <- function(datt = NULL,
                            strata_var = NULL, 
-                           eff_out = FALSE
+                           watermark = FALSE
 ){
   
   # plot parameters
@@ -225,12 +236,16 @@ PGS.strata.plt <- function(datt = NULL,
     theme_bw() + 
     theme(legend.position = "none",
           title = element_text(size = 15, face = "bold", color = "black"),
-          axis.text.x = element_text(size = 12, color = "black"),
-          axis.text.y = element_blank(),
+          axis.text.x = element_text(size = 12, color = "black", angle = 45),
+          axis.text.y = element_text(size = 12, color = "black"),
           axis.title = element_text(size = 15, face = "bold", color = "black"))
-  if(eff_out)
-    plt <- plt + 
-        theme(axis.text.y = element_text(size = 12, color = "black"))
+  if(watermark)
+    plt <- plt  +
+      annotate(geom = "text",
+               x = mean(as.numeric(datt$Group)), y = mean(datt$PGS),
+               label = 'Created by PGSFusion\nUKBB application 144904',
+               color = 'grey', angle = 45,
+               size = 8, alpha = 0.5)
   
   return(plt)
 }
@@ -258,7 +273,7 @@ perform.compare <- function(model1 = NULL,
                                 roc2 = model2, 
                                 method = "bootstrap", 
                                 alternative = "two.sided",
-                                boot.n = 2000, 
+                                boot.n = 1000, 
                                 progress = "none",
                                 conf.level = 0.95)
     return(perform_compare$p.value)
@@ -340,7 +355,7 @@ perform.strata.plt <- function(datt = NULL,
                                test = NULL,
                                type = "gaussian",
                                strata_var = NULL, 
-                               perf_out = FALSE
+                               watermark = FALSE
 ){
   
   # plot parameters
@@ -369,26 +384,31 @@ perform.strata.plt <- function(datt = NULL,
     ggtitle(title_lab) + 
     scale_color_manual(values = GROUP_COL) +
     theme_bw() + 
-    theme(axis.text = element_text(size = 12, color = "black"),
-          axis.text.y = element_blank(),
+    theme(axis.text.x = element_text(size = 12, color = "black", angle = 45),
+          axis.text.y = element_text(size = 12, color = "black"),
           axis.title = element_text(size = 15, face = "bold", color = "black"),
           title = element_text(size = 15, face = "bold", color = "black"))
   ## add test
   if (!is.null(test)) 
     plt <- plt + stat_pvalue_manual(test, label = "p.adj", tip.length = 0.01, 
                                     label.size = 4, bracket.size = 0.6)
-  if(perf_out)
-    plt <- plt + theme(axis.text.y = element_text(size = 15, face = "bold", color = "black"))
+  if(watermark)
+    plt <- plt  + annotate(geom="text",
+                         x = mean(as.numeric(datt$Group)), 
+                         y = mean(c(ref_y, max(datt$highCI))),
+                         label='Created by PGSFusion\nUKBB application 144904', 
+                         color='grey', angle = 45, 
+                         size = 8, alpha=0.5)
   return(plt)
 }
 
 # Function 9: effect strata data
 effect.strata.plt <- function(datt = NULL,
                               strata_var = NULL,
-			                        eff_out = FALSE,
+			                        watermark = FALSE,
                               model = "gaussian"
 ){
-
+  
   ## model parameters
   datt <- subset(datt, rowSums(is.na(datt)) == 0)
   colnames(datt)[which(str_detect(colnames(datt),'NA') | is.na(colnames(datt)))]<-paste0('noname',which(str_detect(colnames(datt),'NA') | is.na(colnames(datt))))
@@ -462,14 +482,18 @@ effect.strata.plt <- function(datt = NULL,
     theme_bw() + 
     theme(legend.position = "none",
           title = element_text(size = 15, face = "bold", color = "black"),
-          axis.text.x = element_text(size = 12, color = "black", angle = 45, 
-                                     hjust = 1, vjust = 1),
+          axis.text.x = element_text(size = 12, color = "black", angle = 45),
+          axis.text.y = element_text(size = 12, color = "black"), 
           axis.title = element_text(size = 15, face = "bold", color = "black"))
-  plt1 <- NULL
-  if(eff_out)
-    plt1 <- plt + theme(axis.text.y = element_text(size = 12, color = "black", angle = 45, 
-                                                  hjust = 1, vjust = 1))
-  return(list(plt, plt1, summ_out_i))
+  if(watermark)
+    plt <- plt  + annotate(geom="text",
+                            x = mean(as.numeric(est_PGS$Group)), 
+                            y = mean(c(0, max(est_PGS$highCI))),
+                            label='Created by PGSFusion\nUKBB application 144904', 
+                            color='grey', angle = 45, 
+                            size = 6, alpha=0.5)
+  
+  return(list(plt, summ_out_i))
 }
 
 # Function 10: subgroup plot
@@ -477,7 +501,7 @@ subgroup.plt <- function(datt = NULL,
                          type = NULL,
                          sub_var = NULL,
                          eff_var = NULL, 
-                         eff_out = FALSE
+                         watermark = FALSE
 ){
   
   model <- ifelse(type == "gaussian", "gaussian", "binomial")
@@ -540,12 +564,16 @@ subgroup.plt <- function(datt = NULL,
     xlab(x_lab) + ylab(y_lab) +
     ggtitle(title_lab) + 
     theme_bw() + 
-    theme(axis.text.x = element_text(size = 12, color = "black"),
-          axis.text.y = element_blank(),
+    theme(axis.text = element_text(size = 12, color = "black"),
           axis.title = element_text(size = 15, face = "bold", color = "black"),
           title = element_text(size = 15, face = "bold", color = "black"))
-  if(eff_out)
-    plt <- plt + theme(axis.text.y = element_text(size = 12, color = "black"))
+  if(watermark)
+    plt <- plt  + annotate(geom="text",
+                           x = mean(as.numeric(est_sub$sub_var)), 
+                           y = mean(c(min(est_sub$lowCI), max(est_sub$highCI))),
+                           label='Created by PGSFusion\nUKBB application 144904', 
+                           color='grey', angle = 45, 
+                           size = 6, alpha=0.5)
   ## add color
   if (eff_var == "PGS_g") {
     
