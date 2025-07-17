@@ -43,4 +43,7 @@ The user can use the server to visit the website: [http://www.pgsfusion.net/#/](
 
 ## Citation
 If you used our server, please cite the our paper: <br>
-<em><strong>Yang S</strong></em>\#\*, Ye X\#, Ji X\#, Li Z, Tian M, Huang P\*, Cao C\*. PGSFusion streamlines polygenic score construction and epidemiological applications in biobank-scale cohorts. <strong>Genome Med</strong>. 2025 Jul 14;17(1):77. [doi: 10.1186/s13073-025-01505-w](https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-025-01505-w). 
+<em><strong>Yang S</strong></em>\#\*, Ye X\#, Ji X\#, Li Z, Tian M, Huang P, Cao C. PGSFusion streamlines polygenic score construction and epidemiological applications in biobank-scale cohorts. <em>Genome Med</em>. 2025 Jul 14;17(1):77. [doi: 10.1186/s13073-025-01505-w](https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-025-01505-w). 
+
+
+
