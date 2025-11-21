@@ -1,0 +1,54 @@
+SDPR=/root/biosoft/SDPR/SDPR-main/SDPR
+
+REF=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/merge_imp
+
+OUT=/disk/reference_pgsfusion/SDPR/EUR/
+
+for chr in `seq 1 22`
+do
+${SDPR} -make_ref -ref_prefix ${REF} -chr ${chr} -ref_dir ${OUT}
+done
+
+
+CALCLD=/root/biosoft/SDPRx/SDPRX-main/calc_ref.py
+
+REF1=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/merge_imp
+REF2=/disk/reference_pgsfusion/1kg/AFR/hm3_imp/mergeout
+
+OUT=/disk/reference_pgsfusion/SDPRx/EUR-AFR/
+python=/root/anaconda3/envs/python3/bin/python
+for chr in 21
+do
+echo ${chr}
+${python} ${CALCLD} --ref_path1 ${REF1} --ref_path2 ${REF2} --chrom ${chr} --threads 1 --out ${OUT}
+done
+
+
+
+
+
+REF1=/disk/reference_pgsfusion/EUR_UKB_ref/hm3_imp/merge_imp
+REF2=/disk/reference_pgsfusion/1kg/EAS/hm3_imp/mergeout
+
+OUT=/disk/reference_pgsfusion/SDPRx/EUR-EAS/
+python=/root/anaconda3/envs/python3/bin/python
+for chr in `seq 21 22`
+do
+echo ${chr}
+${python} ${CALCLD} --ref_path1 ${REF1} --ref_path2 ${REF2} --chrom ${chr} --threads 3 --out ${OUT}
+done
+
+
+
+
+CALCLD=/gpfs/chencao/Temporary_Files/pgsfusion/calc_ref.py
+
+REF1=/gpfs/chencao/Temporary_Files/pgsfusion/reference/merge_imp
+
+OUT=/gpfs/chencao/Temporary_Files/pgsfusion/SDPRx/EUR-AFR/
+for chr in 1
+do
+echo ${chr}
+REF2=/gpfs/chencao/Temporary_Files/pgsfusion/AFR/hm3_imp/chr${chr}
+python ${CALCLD} --ref_path1 ${REF1} --ref_path2 ${REF2} --chrom ${chr} --threads 5 --out ${OUT}
+done
