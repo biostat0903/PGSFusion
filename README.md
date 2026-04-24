@@ -21,6 +21,8 @@ The user can use the server to visit the website: [http://www.pgsfusion.net/#/](
 + We provide two further applications: i) performance evaluation; ii) joint analysis. <br>
 
 ## Update log
+### Version 5 (on coming 2026)
++ Add [GigaPRS](https://dougspeed.com/gigaprs/)
 ### Version 4.1 (June 2025)
 + Add watermark for each figure
 + Add notice for users
